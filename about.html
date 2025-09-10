@@ -1,0 +1,3469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedixPro - Digital Health & Fitness Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --secondary: #06B6D4;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --dark: #1F2937;
+            --sidebar-width: 250px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--dark);
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        .logo i {
+            font-size: 1.7rem;
+            color: var(--secondary);
+        }
+        .nav-group-header {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: white;
+        }
+        .nav-item i {
+            width: 20px;
+            margin-right: 10px;
+        }
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+        .main-content.expanded {
+            margin-left: 0;
+        }
+        .top-bar {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .search-bar {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+            margin: 0 20px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+        }
+        .search-bar i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+        }
+        .notifications {
+            position: relative;
+        }
+        .notifications-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 300px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            display: none;
+            z-index: 1001;
+        }
+        .notifications-dropdown.show {
+            display: block;
+        }
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .notification-item:hover {
+            background: var(--light-color);
+        }
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .card h4 {
+            margin: 0 0 5px;
+            color: var(--dark-color);
+        }
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        .card-change {
+            font-size: 0.9rem;
+            color: var(--success-color);
+        }
+        .card-change.negative {
+            color: var(--danger-color);
+        }
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .table {
+            margin: 0;
+        }
+        .table th {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+        }
+        .table td {
+            padding: 12px 15px;
+            border-color: #eee;
+        }
+        .btn {
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-success {
+            background: var(--success-color);
+            border-color: var(--success-color);
+        }
+        .btn-danger {
+            background: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), #0056b3);
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+        .form-label {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        .form-control, .form-select {
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            transition: border-color 0.2s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .step {
+            flex: 0;
+            text-align: center;
+            padding: 0;
+            background: var(--light-color);
+            border-radius: 50%;
+            position: relative;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            font-size: 1rem;
+        }
+        .step.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        .step.completed {
+            background: var(--success-color);
+            color: white;
+        }
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: calc(100% - 32px);
+            height: 2px;
+            background: #ddd;
+            z-index: -1;
+        }
+        .step.active:not(:last-child)::after,
+        .step.completed:not(:last-child)::after {
+            background: var(--primary-color);
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .health-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .health-metric {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .hidden {
+            display: none !important;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        .col-md-6, .col-md-12 {
+            position: relative;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        @media (min-width: 768px) {
+            .col-md-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+            .col-md-12 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+        .text-success { color: var(--success-color) !important; }
+        .text-danger { color: var(--danger-color) !important; }
+        .text-info { color: var(--info-color) !important; }
+        .text-warning { color: var(--warning-color) !important; }
+        .badge {
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+        .badge.bg-success { background-color: var(--success-color); }
+        .badge.bg-danger { background-color: var(--danger-color); }
+        .badge.bg-warning { background-color: var(--warning-color); }
+        .badge.bg-info { background-color: var(--info-color); }
+        .badge.bg-secondary { background-color: var(--secondary-color); }
+        .badge.bg-primary { background-color: var(--primary-color); }
+        .list-unstyled {
+            padding-left: 0;
+            list-style: none;
+        }
+        ul.list-unstyled li {
+            padding: 5px 0;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .top-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .search-bar {
+                max-width: none;
+                margin: 0;
+            }
+        }
+        .toggle-sidebar {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .toggle-sidebar {
+                display: block;
+            }
+        }
+        .search-highlight {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-hospital"></i>
+                <span>MedixPro</span>
+            </div>
+        </div>
+        <div class="nav-items">
+            <!-- Role-Based Dashboards (Hierarchical Structure) -->
+            <div class="nav-group-header">Dashboards</div>
+            <div class="nav-item active" data-section="super-admin-dashboard">
+                <i class="fas fa-user-shield"></i> Super Admin Dashboard
+            </div>
+            <div class="nav-item" data-section="org-admin-dashboard">
+                <i class="fas fa-building-user"></i> Organization Admin Dashboard
+            </div>
+            <div class="nav-item" data-section="doctor-dashboard">
+                <i class="fas fa-user-md"></i> Doctor Dashboard
+            </div>
+            <div class="nav-item" data-section="staff-dashboard">
+                <i class="fas fa-user-tie"></i> Support Staff Dashboard
+            </div>
+            <div class="nav-item" data-section="patient-dashboard">
+                <i class="fas fa-user"></i> Patient Portal
+            </div>
+
+            <!-- Phase 1: Onboarding and Setup -->
+            <div class="nav-group-header">Onboarding & Setup</div>
+            <div class="nav-item" data-section="organizations">
+                <i class="fas fa-clinic-medical"></i> Organizations & Clients
+            </div>
+            <div class="nav-item" data-section="departments">
+                <i class="fas fa-building"></i> Departments
+            </div>
+            <div class="nav-item" data-section="doctors">
+                <i class="fas fa-users"></i> Doctors Management
+            </div>
+            <div class="nav-item" data-section="staff">
+                <i class="fas fa-user-tie"></i> Staff Management
+            </div>
+            <div class="nav-item" data-section="settings">
+                <i class="fas fa-cog"></i> System Settings
+            </div>
+
+            <!-- Phase 2: Daily Operations Management -->
+            <div class="nav-group-header">Daily Operations</div>
+            <div class="nav-item" data-section="patients">
+                <i class="fas fa-user-injured"></i> Patient Management
+            </div>
+            <div class="nav-item" data-section="appointments">
+                <i class="fas fa-calendar-check"></i> Appointments & Scheduling
+            </div>
+
+            <!-- Phase 3: Clinical and Administrative Support -->
+            <div class="nav-group-header">Clinical & Admin Support</div>
+            <div class="nav-item" data-section="prescriptions">
+                <i class="fas fa-prescription-bottle-alt"></i> Prescriptions
+            </div>
+            <div class="nav-item" data-section="laboratory">
+                <i class="fas fa-vial"></i> Laboratory & Tests
+            </div>
+            <div class="nav-item" data-section="pharmacy">
+                <i class="fas fa-pills"></i> Pharmacy
+            </div>
+            <div class="nav-item" data-section="inventory">
+                <i class="fas fa-boxes"></i> Inventory Management
+            </div>
+            <div class="nav-item" data-section="ambulance">
+                <i class="fas fa-ambulance"></i> Ambulance Coordination
+            </div>
+            <div class="nav-item" data-section="blood-bank">
+                <i class="fas fa-tint"></i> Blood Bank
+            </div>
+            <div class="nav-item" data-section="billing">
+                <i class="fas fa-dollar-sign"></i> Billing & Financials
+            </div>
+
+            <!-- Phase 4: Health and Wellness Integration -->
+            <div class="nav-group-header">Health & Wellness</div>
+            <div class="nav-item" data-section="telehealth">
+                <i class="fas fa-video"></i> Telehealth
+            </div>
+            <div class="nav-item" data-section="health-assistant">
+                <i class="fas fa-robot"></i> AI Health Assistant
+            </div>
+            <div class="nav-item" data-section="fitness">
+                <i class="fas fa-dumbbell"></i> Fitness Tracking
+            </div>
+
+            <!-- Phase 5: Analytics and Reporting -->
+            <div class="nav-group-header">Analytics & Reports</div>
+            <div class="nav-item" data-section="documents">
+                <i class="fas fa-file-medical"></i> Documents & EHR
+            </div>
+            <div class="nav-item" data-section="reports">
+                <i class="fas fa-chart-bar"></i> Analytics & Reports
+            </div>
+        </div>
+    </div>
+
+    <!-- Toggle Sidebar Button for Mobile -->
+    <button class="toggle-sidebar" id="toggleSidebar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h4 id="welcomeMessage">Welcome back!</h4>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="globalSearch" placeholder="Search...">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="notifications">
+                <i class="fas fa-bell" style="font-size: 1rem; cursor: pointer;" id="notificationBell"></i>
+                <span class="badge bg-danger rounded-pill" id="notificationCount" style="position: absolute; top: -5px; right: -5px; font-size: 0.7rem;">3</span>
+                <div class="notifications-dropdown" id="notificationsDropdown">
+                    <!-- Notifications will be populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Sections -->
+        <!-- Super Admin Dashboard (Global Oversight) -->
+        <section id="super-admin-dashboard" class="content-section">
+            <h2>Super Admin Dashboard</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-users card-icon text-primary"></i>
+                    <h4>Total Organizations</h4>
+                    <div class="card-value">45</div>
+                    <div class="card-change">+5 new this month</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-dollar-sign card-icon text-success"></i>
+                    <h4>Global Revenue</h4>
+                    <div class="card-value">PKR 1,250,000</div>
+                    <div class="card-change">+18.5% from last month</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-chart-line card-icon text-info"></i>
+                    <h4>System Usage</h4>
+                    <div class="card-value">92%</div>
+                    <div class="card-change">Active users</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-cog card-icon text-warning"></i>
+                    <h4>Subscriptions</h4>
+                    <div class="card-value">38 Active</div>
+                    <div class="card-change">7 trials</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Client Onboarding Trends</h5>
+                        <canvas id="onboardingChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Revenue by Organization</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Organization</th>
+                                        <th>Revenue</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="revenueTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-container">
+                        <h5>System Analytics</h5>
+                        <p><strong>Uptime:</strong> 99.8% <span class="text-success">Stable</span></p>
+                        <p><strong>Error Rate:</strong> 0.2% <span class="text-danger">Monitor</span></p>
+                        <button class="btn btn-primary" onclick="onboardClient()">Onboard New Client</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Organization Admin Dashboard (Organizational Control) -->
+        <section id="org-admin-dashboard" class="content-section hidden">
+            <h2>Organization Admin Dashboard</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-dollar-sign card-icon text-primary"></i>
+                    <h4>Organization Revenue</h4>
+                    <div class="card-value">PKR 52,456</div>
+                    <div class="card-change">+15.2% from last month</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-calendar-check card-icon text-success"></i>
+                    <h4>Appointments</h4>
+                    <div class="card-value">2,850</div>
+                    <div class="card-change">+12.3% from last month</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-user card-icon text-info"></i>
+                    <h4>Patients</h4>
+                    <div class="card-value">14,567</div>
+                    <div class="card-change">+22.1% from last month</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-user-tie card-icon text-warning"></i>
+                    <h4>Staff</h4>
+                    <div class="card-value">612</div>
+                    <div class="card-change">+6 new this month</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Department Utilization</h5>
+                        <canvas id="departmentChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Recent Integrations</h5>
+                        <ul id="integrationsList" class="list-unstyled">
+                            <!-- Populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Doctor Dashboard (Consultation Focus) -->
+        <section id="doctor-dashboard" class="content-section hidden">
+            <h2>Doctor Dashboard</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-calendar-check card-icon text-primary"></i>
+                    <h4>Today's Appointments</h4>
+                    <div class="card-value">15</div>
+                    <div class="card-change">4 urgent</div>
+                    <button class="btn btn-sm btn-primary mt-2">View Schedule</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-file-medical card-icon text-success"></i>
+                    <h4>Pending Prescriptions</h4>
+                    <div class="card-value">9</div>
+                    <div class="card-change">3 approved</div>
+                    <button class="btn btn-sm btn-success mt-2">Manage Prescriptions</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-users card-icon text-info"></i>
+                    <h4>Active Patients</h4>
+                    <div class="card-value">156</div>
+                    <div class="card-change">10 new</div>
+                    <button class="btn btn-sm btn-info mt-2">View Records</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-tasks card-icon text-warning"></i>
+                    <h4>Pending Tasks</h4>
+                    <div class="card-value">7</div>
+                    <div class="card-change">3 high priority</div>
+                    <button class="btn btn-sm btn-warning mt-2">View Tasks</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Today's Schedule</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Patient</th>
+                                        <th>Time</th>
+                                        <th>Duration</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="todaySchedule">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Patient Histories Overview</h5>
+                        <canvas id="patientHistoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Support Staff Dashboard (Operational Focus) -->
+        <section id="staff-dashboard" class="content-section hidden">
+            <h2>Support Staff Dashboard</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-calendar-check card-icon text-primary"></i>
+                    <h4>Pending Appointments</h4>
+                    <div class="card-value">25</div>
+                    <div class="card-change">10 walk-ins</div>
+                    <button class="btn btn-sm btn-primary mt-2">Schedule</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-dollar-sign card-icon text-success"></i>
+                    <h4>Pending Billings</h4>
+                    <div class="card-value">12</div>
+                    <div class="card-change">Total PKR 45,000</div>
+                    <button class="btn btn-sm btn-success mt-2">Process Payments</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-boxes card-icon text-info"></i>
+                    <h4>Low Inventory Alerts</h4>
+                    <div class="card-value">5 items</div>
+                    <div class="card-change">Reorder needed</div>
+                    <button class="btn btn-sm btn-info mt-2">Manage Inventory</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-vial card-icon text-warning"></i>
+                    <h4>Lab Requests</h4>
+                    <div class="card-value">8</div>
+                    <div class="card-change">3 urgent</div>
+                    <button class="btn btn-sm btn-warning mt-2">Coordinate Tests</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-container">
+                        <h5>Daily Queue Management</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="staffTasks">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Patient Portal (Health Tracking Focus) -->
+        <section id="patient-dashboard" class="content-section hidden">
+            <h2>Patient Portal</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-calendar-check card-icon text-primary"></i>
+                    <h4>Next Appointment</h4>
+                    <div class="card-value">Tomorrow 10:30 AM with Dr. Ahmed</div>
+                    <button class="btn btn-sm btn-primary mt-2">Book/ Reschedule</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-pills card-icon text-success"></i>
+                    <h4>Medications</h4>
+                    <div class="card-value">3 Active</div>
+                    <div class="card-change">Next dose in 1 hour</div>
+                    <button class="btn btn-sm btn-success mt-2">View Reminders</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-vial card-icon text-info"></i>
+                    <h4>Test Results</h4>
+                    <div class="card-value">3 New</div>
+                    <div class="card-change">Blood work from 09/05</div>
+                    <button class="btn btn-sm btn-info mt-2">View Results</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-credit-card card-icon text-warning"></i>
+                    <h4>Billing</h4>
+                    <div class="card-value">PKR 5,000</div>
+                    <div class="card-change">Due in 10 days</div>
+                    <button class="btn btn-sm btn-warning mt-2">Pay Now</button>
+                </div>
+            </div>
+            <div class="health-summary">
+                <div class="health-metric">
+                    <h5>Heart Rate</h5>
+                    <div class="card-value">74 BPM</div>
+                </div>
+                <div class="health-metric">
+                    <h5>Weight</h5>
+                    <div class="card-value">70 kg</div>
+                </div>
+                <div class="health-metric">
+                    <h5>Blood Pressure</h5>
+                    <div class="card-value">120/80</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Preventive Care Recommendations</h5>
+                        <ul class="list-unstyled" id="careTips">
+                            <!-- Populated by JS from AI -->
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Health History Chart</h5>
+                        <canvas id="patientHealthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Organizations & Clients (Super Admin Onboarding) -->
+        <section id="organizations" class="content-section hidden">
+            <h2>Organizations & Client Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#onboardOrgModal">Onboard New Organization</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="orgSearch" placeholder="Search Organizations...">
+                </div>
+                <div class="col-auto">
+                    <select id="orgStatus" class="form-select">
+                        <option>All</option>
+                        <option>Active</option>
+                        <option>Trial</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-secondary" onclick="filterOrganizations()">Apply Filters</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type (Clinic/Hospital)</th>
+                            <th>Subscription Tier</th>
+                            <th>Doctors</th>
+                            <th>Revenue</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="organizationsTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Doctors Management -->
+        <section id="doctors" class="content-section hidden">
+            <h2>Doctors Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addDoctorModal">Add Doctor</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="doctorSearch" placeholder="Search Doctors...">
+                </div>
+                <div class="col-auto">
+                    <select id="doctorStatus" class="form-select">
+                        <option>All</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-secondary" onclick="filterDoctors()">Apply Filters</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Specialty</th>
+                            <th>Department</th>
+                            <th>Patients</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctorsTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Patients Management -->
+        <section id="patients" class="content-section hidden">
+            <h2>Patient Management System</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPatientModal">Register New Patient</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="patientSearch" placeholder="Search Patients...">
+                </div>
+                <div class="col-auto">
+                    <select id="patientStatus" class="form-select">
+                        <option>All</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-secondary" onclick="filterPatients()">Apply Filters</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Demographics</th>
+                            <th>Medical History Summary</th>
+                            <th>Last Visit</th>
+                            <th>Assigned Doctor</th>
+                            <th>Actions (EHR Access)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientsTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Appointments & Scheduling -->
+        <section id="appointments" class="content-section hidden">
+            <h2>Appointment and Scheduling Engine</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#scheduleAppointmentModal">Schedule New Appointment</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="appointmentSearch" placeholder="Search Appointments...">
+                </div>
+                <div class="col-auto">
+                    <input type="date" id="appointmentDateFrom" class="form-control">
+                </div>
+                <div class="col-auto">
+                    <input type="date" id="appointmentDateTo" class="form-control">
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-secondary" onclick="filterAppointments()">Apply Filters</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date & Time</th>
+                            <th>Duration</th>
+                            <th>Type (In-Person/Telehealth)</th>
+                            <th>Status (Reminder Sent)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentsTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Prescriptions -->
+        <section id="prescriptions" class="content-section hidden">
+            <h2>Prescription Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPrescriptionModal">Generate New Prescription</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="prescriptionSearch" placeholder="Search Prescriptions...">
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-secondary" onclick="filterPrescriptions()">Search</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Medication</th>
+                            <th>Dosage & Frequency</th>
+                            <th>Duration</th>
+                            <th>Pharmacy Status</th>
+                            <th>Actions (Print/Share)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prescriptionsTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Laboratory & Tests -->
+        <section id="laboratory" class="content-section hidden">
+            <h2>Laboratory Test Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#orderTestModal">Order New Test</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="labSearch" placeholder="Search Tests...">
+                </div>
+                <div class="col-auto">
+                    <select id="labStatus" class="form-select">
+                        <option>All</option>
+                        <option>Pending</option>
+                        <option>Completed</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-secondary" onclick="filterLabs()">Apply Filters</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Test Type</th>
+                            <th>Ordered By</th>
+                            <th>Date Ordered</th>
+                            <th>Status</th>
+                            <th>Results (Upload/View)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="labTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Pharmacy -->
+        <section id="pharmacy" class="content-section hidden">
+            <h2>Pharmacy Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPharmacyItemModal">Add Medication</button>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Medication</th>
+                            <th>Stock Level</th>
+                            <th>Expiry Date</th>
+                            <th>Price (PKR)</th>
+                            <th>Integration Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pharmacyTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Inventory Management -->
+        <section id="inventory" class="content-section hidden">
+            <h2>Inventory Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addInventoryItemModal">Add Supply Item</button>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Supplier</th>
+                            <th>Expiry/Reorder Date</th>
+                            <th>Low Stock Alert</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Ambulance Coordination -->
+        <section id="ambulance" class="content-section hidden">
+            <h2>Ambulance Services</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#newAmbulanceModal">Request Ambulance</button>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Patient</th>
+                            <th>Pickup Location (Karachi Area)</th>
+                            <th>Status (En Route/Arrived)</th>
+                            <th>ETA</th>
+                            <th>Actions (Track)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ambulanceTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Blood Bank -->
+        <section id="blood-bank" class="content-section hidden">
+            <h2>Blood Bank Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addBloodEntryModal">Add Blood Entry</button>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Blood Type</th>
+                            <th>Available Units</th>
+                            <th>Donor Info</th>
+                            <th>Expiry Date</th>
+                            <th>Request Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bloodBankTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Billing & Financials -->
+        <section id="billing" class="content-section hidden">
+            <h2>Financial Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#newInvoiceModal">Generate Invoice</button>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-dollar-sign card-icon text-primary"></i>
+                    <h4>Total Revenue</h4>
+                    <div class="card-value">PKR 1,527,800</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-file-invoice card-icon text-warning"></i>
+                    <h4>Pending Claims (Insurance)</h4>
+                    <div class="card-value">15</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-exclamation-triangle card-icon text-danger"></i>
+                    <h4>Overdue Payments</h4>
+                    <div class="card-value">PKR 32,000</div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Invoice ID</th>
+                            <th>Patient</th>
+                            <th>Amount (PKR)</th>
+                            <th>Insurance Claim Status</th>
+                            <th>Date</th>
+                            <th>Actions (Process/Pay)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="billingTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Departments -->
+        <section id="departments" class="content-section hidden">
+            <h2>Department Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Add Department</button>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Department Name</th>
+                            <th>Head Doctor</th>
+                            <th>Staff Count</th>
+                            <th>Resource Allocation</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="departmentsTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Staff Management -->
+        <section id="staff" class="content-section hidden">
+            <h2>Staff Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addStaffModal">Add Staff Member</button>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Department</th>
+                            <th>Schedule</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staffTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Telehealth -->
+        <section id="telehealth" class="content-section hidden">
+            <h2>Telehealth Hub</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#scheduleSessionModal">Schedule Session</button>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="card p-4">
+                        <i class="fas fa-video fa-3x text-primary mb-3"></i>
+                        <h5>Video Consultation</h5>
+                        <button class="btn btn-primary mt-2">Join/Start Call</button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-4">
+                        <i class="fas fa-comments fa-3x text-success mb-3"></i>
+                        <h5>Secure Messaging</h5>
+                        <button class="btn btn-success mt-2">Open Chat</button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-4">
+                        <i class="fas fa-share fa-3x text-info mb-3"></i>
+                        <h5>Document Sharing</h5>
+                        <button class="btn btn-info mt-2">Share Files</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="chart-container">
+                        <h5>Remote Monitoring (Chronic Care)</h5>
+                        <canvas id="monitoringChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Health Assistant -->
+        <section id="health-assistant" class="content-section hidden">
+            <h2>AI-Powered Health Assistant</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h5>Symptom Checker</h5>
+                        <textarea class="form-control mb-2" id="symptomInput" placeholder="Describe symptoms..."></textarea>
+                        <button class="btn btn-primary" onclick="runSymptomChecker()">Check Symptoms</button>
+                        <div id="triageResults" class="mt-3"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h5>Test Recommendations</h5>
+                        <select class="form-select mb-2" id="patientForRec">
+                            <option>Select Patient</option>
+                        </select>
+                        <button class="btn btn-success" onclick="recommendTests()">Recommend Tests</button>
+                        <ul id="testRecs" class="mt-3 list-unstyled"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card p-4">
+                        <h5>Personalized Wellness Tips</h5>
+                        <div id="wellnessTips">
+                            <!-- Populated by JS/AI -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fitness Tracking -->
+        <section id="fitness" class="content-section hidden">
+            <h2>Fitness & Preventive Care</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h5>Integrate Wearable Devices</h5>
+                        <select class="form-select mb-2">
+                            <option>Fitbit</option>
+                            <option>Apple Health</option>
+                            <option>Google Fit</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="syncFitnessData()">Sync Data</button>
+                        <canvas id="fitnessChart" class="mt-3"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h5>Activity Tracking</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Steps</th>
+                                        <th>Calories</th>
+                                        <th>Goal Progress</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activityTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documents & EHR -->
+        <section id="documents" class="content-section hidden">
+            <h2>Documents & Electronic Health Records</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#uploadDocumentModal">Upload Document</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="docSearch" placeholder="Search Documents...">
+                </div>
+                <div class="col-auto">
+                    <select id="docType" class="form-select">
+                        <option>All</option>
+                        <option>Test Results</option>
+                        <option>Imaging</option>
+                        <option>Reports</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Document Name</th>
+                            <th>Patient</th>
+                            <th>Type</th>
+                            <th>Upload Date</th>
+                            <th>Access Level</th>
+                            <th>Actions (View/Share)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentsTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Analytics & Reports -->
+        <section id="reports" class="content-section hidden">
+            <h2>Analytics and Reporting Dashboard</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-chart-bar card-icon text-primary"></i>
+                    <h4>Patient Outcomes</h4>
+                    <div class="card-value">95% Satisfaction</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-tachometer-alt card-icon text-success"></i>
+                    <h4>Operational Efficiency</h4>
+                    <div class="card-value">87%</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-coins card-icon text-info"></i>
+                    <h4>Resource Utilization</h4>
+                    <div class="card-value">76%</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-file-alt card-icon text-warning"></i>
+                    <h4>Quality Metrics</h4>
+                    <div class="card-value">4.2/5</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Revenue Trends</h5>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Generate Custom Report</h5>
+                        <select id="reportType" class="form-select mb-2">
+                            <option>Revenue Analytics</option>
+                            <option>Patient Outcomes</option>
+                            <option>Appointment Trends</option>
+                            <option>Resource Utilization</option>
+                            <option>Preventive Care Metrics</option>
+                        </select>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="date" id="reportStart" class="form-control">
+                            </div>
+                            <div class="col">
+                                <input type="date" id="reportEnd" class="form-control">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateReport()">Generate</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings -->
+        <section id="settings" class="content-section hidden">
+            <h2>System Settings</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Role-Based Access Control</h5>
+                        <form id="roleForm">
+                            <div class="mb-3">
+                                <label class="form-label">User Role</label>
+                                <select class="form-select" id="userRole">
+                                    <option>Super Admin</option>
+                                    <option>Org Admin</option>
+                                    <option>Doctor</option>
+                                    <option>Support Staff</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Permissions</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="ehrAccess">
+                                    <label class="form-check-label" for="ehrAccess">EHR Access</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="billingAccess">
+                                    <label class="form-check-label" for="billingAccess">Billing Access</label>
+                                </div>
+                                <!-- Additional permissions -->
+                                <button type="submit" class="btn btn-primary mt-2">Update Permissions</button>
+                            </form>
+                        </div>
+                    </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Integration & Customization</h5>
+                        <p><strong>Third-Party Integrations:</strong> Lab Systems, Payment Gateways</p>
+                        <button class="btn btn-secondary" onclick="manageIntegrations()">Manage Integrations</button>
+                        <p><strong>Notifications:</strong> SMS/Email/WhatsApp Setup</p>
+                        <button class="btn btn-info" onclick="setupNotifications()">Configure</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modals -->
+    <!-- Onboard Organization Modal -->
+    <div class="modal fade" id="onboardOrgModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Onboard New Organization</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="onboardForm">
+                        <div class="mb-3">
+                            <label class="form-label">Organization Name</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Type</label>
+                            <select class="form-select">
+                                <option>Single Doctor</option>
+                                <option>Small Clinic (1-5 Doctors)</option>
+                                <option>Multi-Doctor Clinic (5-20)</option>
+                                <option>Hospital (20+)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Location (Karachi Area)</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Subscription Tier</label>
+                            <select class="form-select">
+                                <option>Basic</option>
+                                <option>Standard</option>
+                                <option>Enterprise</option>
+                            </select>
+                        </div>
+                        <!-- Modules selection -->
+                        <div class="mb-3">
+                            <label class="form-label">Enable Modules</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="patientMgmt">
+                                <label class="form-check-label" for="patientMgmt">Patient Management</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="telehealthMgmt">
+                                <label class="form-check-label" for="telehealthMgmt">Telehealth</label>
+                            </div>
+                            <!-- More checkboxes -->
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="onboardOrg()">Onboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Test Modal -->
+    <div class="modal fade" id="orderTestModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Order Laboratory Test</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="testForm">
+                        <div class="mb-3">
+                            <label class="form-label">Patient</label>
+                            <select class="form-select" required>
+                                <option>John Smith</option>
+                                <option>Emily Davis</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Test Type</label>
+                            <select class="form-select" required>
+                                <option>Blood Test</option>
+                                <option>Urine Analysis</option>
+                                <option>Imaging (X-Ray)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="orderTest()">Order Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Doctor Modal (Multi-step) -->
+    <div class="modal fade" id="addDoctorModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Doctor</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="stepper" id="doctorStepper">
+                        <div class="step active">1</div>
+                        <div class="step">2</div>
+                        <div class="step">3</div>
+                    </div>
+                    <form id="addDoctorForm">
+                        <!-- Step 1: Personal Information -->
+                        <div class="step-content active" data-step="1">
+                            <div class="mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" required name="firstName">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" required name="lastName">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" required name="dob">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" required name="gender">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Address</label>
+                                <input type="text" class="form-control" required name="address">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">City</label>
+                                    <input type="text" class="form-control" required name="city">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">State</label>
+                                    <input type="text" class="form-control" required name="state">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Zip Code</label>
+                                    <input type="text" class="form-control" required name="zip">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" required name="email">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" required name="phone">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Emergency Contact Name</label>
+                                <input type="text" class="form-control" name="emergencyName">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Emergency Contact Phone</label>
+                                <input type="tel" class="form-control" name="emergencyPhone">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Profile Photo</label>
+                                <input type="file" class="form-control" accept="image/*" name="photo">
+                            </div>
+                        </div>
+                        <!-- Step 2: Professional Details -->
+                        <div class="step-content hidden" data-step="2">
+                            <div class="mb-3">
+                                <label class="form-label">Primary Specialization</label>
+                                <select class="form-select" required name="specialty">
+                                    <option>Cardiology</option>
+                                    <option>Neurology</option>
+                                    <option>Pediatrics</option>
+                                    <option>Orthopedics</option>
+                                    <option>Dermatology</option>
+                                    <option>Psychiatry</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Secondary Specialization (Optional)</label>
+                                <select class="form-select" name="secondarySpecialty">
+                                    <option>None</option>
+                                    <option>Cardiology</option>
+                                    <option>Neurology</option>
+                                    <option>Pediatrics</option>
+                                    <option>Orthopedics</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Medical License Number</label>
+                                <input type="text" class="form-control" required name="licenseNumber">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">License Expiry Date</label>
+                                <input type="date" class="form-control" required name="licenseExpiry">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Qualifications</label>
+                                <textarea class="form-control" rows="3" name="qualifications"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Education & Training</label>
+                                <textarea class="form-control" rows="3" name="education"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Certifications</label>
+                                <textarea class="form-control" rows="3" name="certifications"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Department</label>
+                                <select class="form-select" required name="department">
+                                    <option>Internal Medicine</option>
+                                    <option>Neuroscience</option>
+                                    <option>Child Health</option>
+                                    <option>Surgery</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Position</label>
+                                <select class="form-select" required name="position">
+                                    <option>Senior Doctor</option>
+                                    <option>Junior Doctor</option>
+                                    <option>Consultant</option>
+                                    <option>Resident</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Step 3: Account Settings -->
+                        <div class="step-content hidden" data-step="3">
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" required name="username">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Temporary Password</label>
+                                <input type="password" class="form-control" required name="password">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" required name="emailAccount">
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="patientRecords" name="patientRecords">
+                                <label class="form-check-label" for="patientRecords">Patient Records - Allow access</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="prescriptionsAccess" checked name="prescriptionsAccess">
+                                <label class="form-check-label" for="prescriptionsAccess">Prescriptions - Allow creating and managing</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="billingAccess" name="billingAccess">
+                                <label class="form-check-label" for="billingAccess">Billing - Allow access</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="reportsAccess" checked name="reportsAccess">
+                                <label class="form-check-label" for="reportsAccess">Reports - Allow access</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="mfaEnabled" name="mfaEnabled">
+                                <label class="form-check-label" for="mfaEnabled">MFA Enabled</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="appointmentNotifications" checked name="appointmentNotifications">
+                                <label class="form-check-label" for="appointmentNotifications">Appointment Notifications</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="patientUpdates" checked name="patientUpdates">
+                                <label class="form-check-label" for="patientUpdates">Patient Updates</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="systemNotifications" checked name="systemNotifications">
+                                <label class="form-check-label" for="systemNotifications">System Notifications</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="prevStep">Previous</button>
+                    <button type="button" class="btn btn-primary" id="nextStep">Next</button>
+                    <button type="button" class="btn btn-success" id="saveDoctor" style="display: none;">Save Doctor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Patient Modal -->
+    <div class="modal fade" id="addPatientModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Patient</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="stepper">
+                        <div class="step active">1</div>
+                        <div class="step">2</div>
+                    </div>
+                    <form id="addPatientForm">
+                        <!-- Step 1: Personal Information -->
+                        <div class="step-content active" data-step="1">
+                            <div class="mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" required name="firstName">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" required name="lastName">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" required name="dob">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" required name="gender">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control" name="phone">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Address</label>
+                                <textarea class="form-control" rows="2" name="address"></textarea>
+                            </div>
+                        </div>
+                        <!-- Step 2: Medical Details -->
+                        <div class="step-content hidden" data-step="2">
+                            <div class="mb-3">
+                                <label class="form-label">Assigned Doctor</label>
+                                <select class="form-select" required name="doctor">
+                                    <option>Dr. Ahmed</option>
+                                    <option>Dr. Khan</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Allergies</label>
+                                <textarea class="form-control" rows="2" name="allergies"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Medical History</label>
+                                <textarea class="form-control" rows="3" name="medicalHistory"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Problem (SNOMED CT)</label>
+                                <select class="form-select" multiple name="problem">
+                                    <option>44054006 (Diabetes)</option>
+                                    <option>73211009 (Hypertension)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Diagnosis (ICD-10)</label>
+                                <select class="form-select" multiple name="diagnosis">
+                                    <option>E11.9 (Type 2 diabetes)</option>
+                                    <option>I10 (Hypertension)</option>
+                                </select>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="dataSharingConsent" checked name="dataSharingConsent">
+                                <label class="form-check-label" for="dataSharingConsent">Consent for Data Sharing</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="patientPrev">Previous</button>
+                    <button type="button" class="btn btn-primary" id="patientNext">Next</button>
+                    <button type="button" class="btn btn-success" id="savePatient" style="display: none;">Save Patient</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Appointment Modal -->
+    <div class="modal fade" id="scheduleAppointmentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Schedule Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="scheduleForm">
+                        <div class="mb-3">
+                            <label class="form-label">Patient</label>
+                            <select class="form-select" required name="patient">
+                                <option>John Smith</option>
+                                <option>Emily Davis</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Doctor</label>
+                            <select class="form-select" required name="doctor">
+                                <option>Dr. Ahmed</option>
+                                <option>Dr. Khan</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" required name="date">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Time</label>
+                                <input type="time" class="form-control" required name="time">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Duration</label>
+                            <select class="form-select" required name="duration">
+                                <option>15 minutes</option>
+                                <option>30 minutes</option>
+                                <option>45 minutes</option>
+                                <option>60 minutes</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" required name="type">
+                                <option>Check-up</option>
+                                <option>Consultation</option>
+                                <option>Follow-up</option>
+                                <option>Surgery</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" rows="3" name="notes"></textarea>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="telehealth" name="telehealth">
+                            <label class="form-check-label" for="telehealth">Telehealth Appointment</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAppointment()">Save Appointment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Prescription Modal -->
+    <div class="modal fade" id="addPrescriptionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Prescription</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="prescriptionForm">
+                        <div class="mb-3">
+                            <label class="form-label">Patient</label>
+                            <select class="form-select" required name="patient">
+                                <option>John Smith</option>
+                                <option>Emily Davis</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Medication</label>
+                            <input type="text" class="form-control" required name="medication">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dosage</label>
+                            <input type="text" class="form-control" required name="dosage">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Frequency</label>
+                            <input type="text" class="form-control" required name="frequency">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Start Date</label>
+                                <input type="date" class="form-control" required name="start">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control" required name="end">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="savePrescription()">Save Prescription</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Ambulance Request Modal -->
+    <div class="modal fade" id="newAmbulanceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Ambulance Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="ambulanceForm">
+                        <div class="mb-3">
+                            <label class="form-label">Patient</label>
+                            <select class="form-select" required name="patient">
+                                <option>John Smith</option>
+                                <option>Emily Davis</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" required name="location">
+                        </div>
+                        <!-- Additional fields can be added -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAmbulanceRequest()">Save Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Pharmacy Item Modal -->
+    <div class="modal fade" id="addPharmacyItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Pharmacy Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="pharmacyForm">
+                        <div class="mb-3">
+                            <label class="form-label">Medication</label>
+                            <input type="text" class="form-control" required name="medication">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Stock</label>
+                            <input type="number" class="form-control" required name="stock">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Expiry</label>
+                            <input type="date" class="form-control" required name="expiry">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Price</label>
+                            <input type="number" step="0.01" class="form-control" required name="price">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="savePharmacyItem()">Save Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Blood Bank Entry Modal -->
+    <div class="modal fade" id="addBloodEntryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Blood Bank Entry</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bloodForm">
+                        <div class="mb-3">
+                            <label class="form-label">Blood Type</label>
+                            <select class="form-select" required name="type">
+                                <option>O+</option>
+                                <option>A-</option>
+                                <option>A+</option>
+                                <option>B-</option>
+                                <option>B+</option>
+                                <option>AB-</option>
+                                <option>AB+</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" class="form-control" required name="quantity">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Donor</label>
+                            <input type="text" class="form-control" required name="donor">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Expiry</label>
+                            <input type="date" class="form-control" required name="expiry">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveBloodEntry()">Save Entry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Invoice Modal -->
+    <div class="modal fade" id="newInvoiceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Invoice</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="invoiceForm">
+                        <div class="mb-3">
+                            <label class="form-label">Patient</label>
+                            <select class="form-select" required name="patient">
+                                <option>John Smith</option>
+                                <option>Emily Davis</option>
+                            </select>
+                        </div>
+                        <!-- Additional fields for amount, items, etc. -->
+                        <div class="mb-3">
+                            <label class="form-label">Amount (PKR)</label>
+                            <input type="number" class="form-control" required name="amount">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Services</label>
+                            <textarea class="form-control" name="services"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveInvoice()">Create Invoice</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Department Modal -->
+    <div class="modal fade" id="addDepartmentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Department</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="departmentForm">
+                        <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <input type="text" class="form-control" required name="department">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Head</label>
+                            <select class="form-select" required name="head">
+                                <option>Dr. Ahmed</option>
+                                <option>Dr. Khan</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveDepartment()">Save Department</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Inventory Item Modal -->
+    <div class="modal fade" id="addInventoryItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Inventory Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="inventoryForm">
+                        <div class="mb-3">
+                            <label class="form-label">Item</label>
+                            <input type="text" class="form-control" required name="item">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" class="form-control" required name="quantity">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Supplier</label>
+                            <input type="text" class="form-control" required name="supplier">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Expiry</label>
+                            <input type="date" class="form-control" name="expiry">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveInventoryItem()">Save Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <div class="modal fade" id="addStaffModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Staff</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="staffForm">
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" required name="name">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <input type="text" class="form-control" required name="role">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Department</label>
+                            <select class="form-select" required name="department">
+                                <option>Internal Medicine</option>
+                                <option>Neuroscience</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contact</label>
+                            <input type="tel" class="form-control" name="contact">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveStaff()">Save Staff</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Session Modal -->
+    <div class="modal fade" id="scheduleSessionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Schedule Telehealth Session</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sessionForm">
+                        <div class="mb-3">
+                            <label class="form-label">Patient</label>
+                            <select class="form-select" name="patient">
+                                <option>John Smith</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Doctor</label>
+                            <select class="form-select" name="doctor">
+                                <option>Dr. Ahmed</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" name="date">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Time</label>
+                                <input type="time" class="form-control" name="time">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveSession()">Schedule Session</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Document Modal -->
+    <div class="modal fade" id="uploadDocumentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload & OCR Document</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="documentForm" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Document</label>
+                            <input type="file" class="form-control" accept=".pdf,.jpg,.png" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Scan/OCR Legacy Paper</label>
+                            <input type="file" class="form-control" accept="image/*">
+                        </div>
+                    </form>
+                    <div id="ocrResult" class="mt-3 hidden">
+                        <h6>OCR Result:</h6>
+                        <textarea class="form-control" rows="5" readonly></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="uploadDocument()">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal (for Settings) -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProfileForm">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" value="Dr. Ahmed" name="name">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="dr.ahmed@medixpro.com" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" value="+92 300 1234567" name="phone">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <select class="form-select" name="role">
+                                <option selected>Admin</option>
+                                <option>Doctor</option>
+                                <option>Staff</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveEditProfile()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let currentUserRole = 'super-admin'; // Default to super admin for demo
+        let currentStep = 1;
+        let currentPatientStep = 1;
+        let charts = {};
+
+        // Mock data for demonstration (updated for Pakistan context and 2025 dates)
+        const mockData = {
+            organizations: [
+                { id: 1, name: 'Karachi General Hospital', type: 'Hospital', tier: 'Enterprise', doctors: 50, revenue: 'PKR 5,000,000', status: 'Active' },
+                { id: 2, name: 'Dr. Ahmed Clinic', type: 'Small Clinic', tier: 'Basic', doctors: 3, revenue: 'PKR 150,000', status: 'Trial' },
+                { id: 3, name: 'Sindh Medical Center', type: 'Multi-Doctor Clinic', tier: 'Standard', doctors: 12, revenue: 'PKR 800,000', status: 'Active' }
+            ],
+            laboratory: [
+                { id: 1, patient: 'John Smith', testType: 'Blood Test', orderedBy: 'Dr. Ahmed', dateOrdered: '2025-09-10', status: 'Pending', results: 'N/A' },
+                { id: 2, patient: 'Emily Davis', testType: 'Urine Analysis', orderedBy: 'Dr. Khan', dateOrdered: '2025-09-09', status: 'Completed', results: 'View' }
+            ],
+            recentAppointments: [
+                { patient: 'John Smith', type: 'Check-up', time: 'Today 10:00 AM', status: 'Confirmed' },
+                { patient: 'Emily Davis', type: 'Consultation', time: 'Today 11:30 AM', status: 'In Progress' },
+                { patient: 'Robert Wilson', type: 'Follow-up', time: 'Today 09:15 AM', status: 'Completed' },
+                { patient: 'Alice Brown', type: 'Vaccination', time: 'Today 02:00 PM', status: 'Pending' },
+                { patient: 'Emma Thompson', type: 'Check-up', time: 'Today 09:00 AM', status: 'Confirmed' }
+            ],
+            todaySchedule: [
+                { patient: 'Emma Thompson', time: '09:00 AM', duration: '30 min', type: 'Check-up' },
+                { patient: 'Michael Chen', time: '10:15 AM', duration: '45 min', type: 'Follow-up' },
+                { patient: 'Sophia Rodriguez', time: '11:30 AM', duration: '60 min', type: 'Consultation' },
+                { patient: 'John Doe', time: '12:00 PM', duration: '30 min', type: 'Check-up' },
+                { patient: 'Jane Smith', time: '01:00 PM', duration: '45 min', type: 'Consultation' }
+            ],
+            upcomingAppointments: [
+                { patient: 'John Doe', datetime: '2025-09-13 09:00 AM', status: 'Confirmed', type: 'Follow-up' },
+                { patient: 'Jane Smith', datetime: '2025-09-13 10:30 AM', status: 'Pending', type: 'New Patient' },
+                { patient: 'Alice Brown', datetime: '2025-09-14 11:00 AM', status: 'Confirmed', type: 'Vaccination' },
+                { patient: 'Robert Wilson', datetime: '2025-09-15 02:00 PM', status: 'Pending', type: 'Follow-up' }
+            ],
+            medicationReminders: [
+                'Lisinopril - 10mg • Once daily - 8:00 AM',
+                'Metformin - 500mg • Twice daily - 2:00 PM',
+                'Aspirin - 81mg • Once daily - 9:00 PM'
+            ],
+            doctors: [
+                { id: 1, name: 'Dr. Ahmed Khan', specialty: 'Cardiology', department: 'Cardiology', status: 'Active', patients: 45 },
+                { id: 2, name: 'Dr. Sarah Williams', specialty: 'Neurology', department: 'Neurology', status: 'Active', patients: 32 },
+                { id: 3, name: 'Dr. Michael Brown', specialty: 'Pediatrics', department: 'Pediatrics', status: 'Active', patients: 28 }
+            ],
+            patients: [
+                { id: 1, name: 'John Smith', demographics: '35/M', history: 'Hypertension', lastVisit: '2025-09-10', doctor: 'Dr. Ahmed Khan', phone: '+92 300 1234567' },
+                { id: 2, name: 'Emily Davis', demographics: '28/F', history: 'Diabetes', lastVisit: '2025-09-05', doctor: 'Dr. Sarah Williams', phone: '+92 321 2345678' },
+                { id: 3, name: 'Robert Wilson', demographics: '42/M', history: 'Asthma', lastVisit: '2025-09-08', doctor: 'Dr. Michael Brown', phone: '+92 333 3456789' }
+            ],
+            appointments: [
+                { id: 1, patient: 'John Smith', doctor: 'Dr. Ahmed Khan', dateTime: '2025-09-10 10:00', duration: '30 min', type: 'Check-up (In-Person)', status: 'Confirmed (Reminder Sent)' },
+                { id: 2, patient: 'Emily Davis', doctor: 'Dr. Sarah Williams', dateTime: '2025-09-11 14:30', duration: '45 min', type: 'Consultation (Telehealth)', status: 'Pending' }
+            ],
+            prescriptions: [
+                { id: 1, patient: 'John Smith', medication: 'Lisinopril', dosageFreq: '10mg Daily', duration: '3 months', pharmacyStatus: 'Dispensed', actions: 'Print/Share' },
+                { id: 2, patient: 'Emily Davis', medication: 'Metformin', dosageFreq: '500mg Twice daily', duration: '6 months', pharmacyStatus: 'Pending', actions: 'Print/Share' }
+            ],
+            ambulance: [
+                { id: 'AMB001', patient: 'John Smith', location: 'Clifton, Karachi', status: 'En Route', eta: '15 min', actions: 'Track' },
+                { id: 'AMB002', patient: 'Alice Brown', location: 'Gulshan-e-Iqbal, Karachi', status: 'Arrived', eta: 'N/A', actions: 'Track' }
+            ],
+            bloodBank: [
+                { id: 1, type: 'O+', units: 10, donor: 'Ahmed Ali', expiry: '2025-10-10', status: 'Available', actions: 'Use' },
+                { id: 2, type: 'A-', units: 5, donor: 'Sara Khan', expiry: '2025-10-15', status: 'Requested', actions: 'Use' }
+            ],
+            billing: [
+                { id: 'INV001', patient: 'John Smith', amount: 15000, insurance: 'Pending', date: '2025-09-10', actions: 'Process/Pay' },
+                { id: 'INV002', patient: 'Emily Davis', amount: 22550, insurance: 'Approved', date: '2025-09-08', actions: 'Process/Pay' }
+            ],
+            departments: [
+                { id: 1, name: 'Cardiology', head: 'Dr. Ahmed Khan', staff: 15, allocation: 'High', status: 'Active', actions: 'Edit' },
+                { id: 2, name: 'Neurology', head: 'Dr. Sarah Williams', staff: 12, allocation: 'Medium', status: 'Active', actions: 'Edit' }
+            ],
+            inventory: [
+                { id: 1, item: 'Syringes', quantity: 1000, supplier: 'MedSupply Pakistan', expiry: '2026-06-01', alert: 'No', actions: 'Edit' },
+                { id: 2, item: 'Surgical Gloves', quantity: 500, supplier: 'SafeMed', expiry: '2027-01-01', alert: 'Low', actions: 'Edit' }
+            ],
+            staff: [
+                { id: 1, name: 'Alice Brown', role: 'Nurse', department: 'Cardiology', schedule: 'Full-time', status: 'Active', actions: 'Edit' },
+                { id: 2, name: 'David Wilson', role: 'Lab Technician', department: 'Laboratory', schedule: 'Part-time', status: 'Active', actions: 'Edit' }
+            ],
+            documents: [
+                { id: 1, name: 'Patient Record 001.pdf', patient: 'John Smith', type: 'Medical Record', date: '2025-09-10', access: 'Doctor Only', actions: 'View/Share' },
+                { id: 2, name: 'Lab Results - Blood Work.pdf', patient: 'Emily Davis', type: 'Lab Report', date: '2025-09-09', access: 'Patient & Doctor', actions: 'View/Share' }
+            ],
+            reports: [
+                { id: 1, report: 'Monthly Revenue - Aug 2025', date: '2025-09-01', status: 'Generated', actions: 'Download' },
+                { id: 2, report: 'Patient Demographics - Sep 2025', date: '2025-09-05', status: 'Generated', actions: 'Download' }
+            ],
+            notifications: [
+                { id: 1, message: 'New Appointment: John Smith scheduled for 10:00 AM', time: '2 hours ago', read: false },
+                { id: 2, message: 'Low Inventory: Syringes stock below 100 units', time: '5 hours ago', read: false },
+                { id: 3, message: 'Payment Received: Emily Davis paid PKR 15,000', time: '1 day ago', read: true }
+            ],
+            staffTasks: [
+                { task: 'Patient Registration', priority: 'High', status: 'Pending', actions: 'Complete' },
+                { task: 'Billing Processing', priority: 'Medium', status: 'In Progress', actions: 'Complete' }
+            ],
+            careTips: [
+                'Heart Health: Aim for 30 minutes of exercise daily.',
+                'Stress Management: Practice mindfulness for 10 minutes.',
+                'Nutrition: Eat more fruits and vegetables.'
+            ],
+            activityTable: [
+                { date: '2025-09-10', steps: 8500, calories: 450, progress: '85%' },
+                { date: '2025-09-09', steps: 7200, calories: 380, progress: '72%' }
+            ],
+            integrationsList: [
+                'Lab System - Connected',
+                'Payment Gateway - Active',
+                'Pharmacy API - Integrated'
+            ],
+            revenueTable: [
+                { org: 'Karachi General', revenue: 'PKR 5M', status: 'Active' },
+                { org: 'Dr. Ahmed Clinic', revenue: 'PKR 150K', status: 'Trial' }
+            ]
+        };
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('MedixPro System Initializing...');
+            initializeUserRole();
+            setupEventListeners();
+            populateAllSections();
+            initializeCharts();
+            setupRealTimeFeatures();
+            console.log('MedixPro System Ready');
+        });
+
+        // User Role and Access Control
+        function initializeUserRole() {
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            if (welcomeMessage) {
+                welcomeMessage.textContent = `Welcome back, ${currentUserRole.replace('-', ' ').toUpperCase()}!`;
+            }
+            hideRoleRestrictedSections();
+        }
+
+        function hideRoleRestrictedSections() {
+            const navItems = document.querySelectorAll('.nav-item');
+            // Simplified role-based hiding - super-admin sees all, others limited
+            if (currentUserRole !== 'super-admin') {
+                const restricted = ['super-admin-dashboard', 'organizations'];
+                navItems.forEach(item => {
+                    if (restricted.includes(item.dataset.section)) {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+            showSection('super-admin-dashboard');
+        }
+
+        // Event Listeners Setup
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showSection(e.currentTarget.dataset.section);
+                });
+            });
+
+            // Search functionality
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', debounce(handleGlobalSearch, 300));
+            }
+
+            // Mobile sidebar toggle
+            const toggleSidebar = document.getElementById('toggleSidebar');
+            if (toggleSidebar) {
+                toggleSidebar.addEventListener('click', handleToggleSidebar);
+            }
+
+            // Notification handling
+            const notificationBell = document.getElementById('notificationBell');
+            if (notificationBell) {
+                notificationBell.addEventListener('click', toggleNotifications);
+            }
+            document.addEventListener('click', handleOutsideClick);
+
+            // Multi-step modals
+            setupDoctorModal();
+            setupPatientModal();
+
+            // Form submissions
+            setupFormHandlers();
+
+            // Filter buttons
+            setupFilterHandlers();
+
+            // Role form
+            const roleForm = document.getElementById('roleForm');
+            if (roleForm) {
+                roleForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    showAlert('Permissions updated successfully!', 'success');
+                });
+            }
+
+            // Window resize handler
+            window.addEventListener('resize', handleWindowResize);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+        }
+
+        // Navigation and Section Management
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                const activeNavItem = document.querySelector(`[data-section="${sectionId}"]`);
+                if (activeNavItem) {
+                    activeNavItem.classList.add('active');
+                }
+                // Trigger any section-specific initialization
+                if (typeof window[`init${sectionId.replace(/-/g, '')}`] === 'function') {
+                    window[`init${sectionId.replace(/-/g, '')}`]();
+                }
+            }
+        }
+
+        // Populate All Sections with Mock Data
+        function populateAllSections() {
+            populateOrganizations();
+            populateDoctors();
+            populatePatients();
+            populateAppointments();
+            populatePrescriptions();
+            populateLaboratory();
+            populatePharmacy();
+            populateInventory();
+            populateAmbulance();
+            populateBloodBank();
+            populateBilling();
+            populateDepartments();
+            populateStaff();
+            populateDocuments();
+            populateReports();
+            populateNotifications();
+            populateStaffTasks();
+            populateCareTips();
+            populateActivityTable();
+            populateIntegrationsList();
+            populateRevenueTable();
+            populateTodaySchedule();
+        }
+
+        function populateOrganizations() {
+            const tableBody = document.getElementById('organizationsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.organizations.map(org => `
+                    <tr>
+                        <td>${org.name}</td>
+                        <td>${org.type}</td>
+                        <td><span class="badge bg-${org.status.toLowerCase()}">${org.tier}</span></td>
+                        <td>${org.doctors}</td>
+                        <td>${org.revenue}</td>
+                        <td><span class="badge bg-${org.status.toLowerCase()}">${org.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">Edit</button> <button class="btn btn-sm btn-danger">Delete</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateDoctors() {
+            const tableBody = document.getElementById('doctorsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.doctors.map(doc => `
+                    <tr>
+                        <td>${doc.name}</td>
+                        <td>${doc.specialty}</td>
+                        <td>${doc.department}</td>
+                        <td>${doc.patients}</td>
+                        <td><span class="badge bg-${doc.status.toLowerCase()}">${doc.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">Edit</button> <button class="btn btn-sm btn-danger">Deactivate</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populatePatients() {
+            const tableBody = document.getElementById('patientsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.patients.map(patient => `
+                    <tr>
+                        <td>${patient.name}</td>
+                        <td>${patient.demographics}</td>
+                        <td>${patient.history}</td>
+                        <td>${patient.lastVisit}</td>
+                        <td>${patient.doctor}</td>
+                        <td><button class="btn btn-sm btn-info">View EHR</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateAppointments() {
+            const tableBody = document.getElementById('appointmentsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.appointments.map(apt => `
+                    <tr>
+                        <td>${apt.patient}</td>
+                        <td>${apt.doctor}</td>
+                        <td>${apt.dateTime}</td>
+                        <td>${apt.duration}</td>
+                        <td>${apt.type}</td>
+                        <td><span class="badge bg-success">${apt.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">Edit</button> <button class="btn btn-sm btn-danger">Cancel</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populatePrescriptions() {
+            const tableBody = document.getElementById('prescriptionsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.prescriptions.map(pres => `
+                    <tr>
+                        <td>${pres.patient}</td>
+                        <td>${pres.medication}</td>
+                        <td>${pres.dosageFreq}</td>
+                        <td>${pres.duration}</td>
+                        <td><span class="badge bg-${pres.pharmacyStatus.toLowerCase()}">${pres.pharmacyStatus}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${pres.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateLaboratory() {
+            const tableBody = document.getElementById('labTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.laboratory.map(test => `
+                    <tr>
+                        <td>${test.patient}</td>
+                        <td>${test.testType}</td>
+                        <td>${test.orderedBy}</td>
+                        <td>${test.dateOrdered}</td>
+                        <td><span class="badge bg-${test.status.toLowerCase()}">${test.status}</span></td>
+                        <td><button class="btn btn-sm btn-info">${test.results}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populatePharmacy() {
+            const tableBody = document.getElementById('pharmacyTable');
+            if (tableBody) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td>Lisinopril</td>
+                        <td>150 units</td>
+                        <td>2026-03-01</td>
+                        <td>PKR 50</td>
+                        <td>Integrated</td>
+                        <td><button class="btn btn-sm btn-primary">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td>Metformin</td>
+                        <td>200 units</td>
+                        <td>2025-12-15</td>
+                        <td>PKR 30</td>
+                        <td>Pending</td>
+                        <td><button class="btn btn-sm btn-primary">Edit</button></td>
+                    </tr>
+                `;
+            }
+        }
+
+        function populateInventory() {
+            const tableBody = document.getElementById('inventoryTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.inventory.map(item => `
+                    <tr>
+                        <td>${item.item}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.supplier}</td>
+                        <td>${item.expiry}</td>
+                        <td><span class="badge bg-${item.alert === 'Low' ? 'warning' : 'success'}">${item.alert}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${item.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateAmbulance() {
+            const tableBody = document.getElementById('ambulanceTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.ambulance.map(req => `
+                    <tr>
+                        <td>${req.id}</td>
+                        <td>${req.patient}</td>
+                        <td>${req.location}</td>
+                        <td><span class="badge bg-info">${req.status}</span></td>
+                        <td>${req.eta}</td>
+                        <td><button class="btn btn-sm btn-primary">${req.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateBloodBank() {
+            const tableBody = document.getElementById('bloodBankTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.bloodBank.map(entry => `
+                    <tr>
+                        <td>${entry.type}</td>
+                        <td>${entry.units}</td>
+                        <td>${entry.donor}</td>
+                        <td>${entry.expiry}</td>
+                        <td><span class="badge bg-${entry.status.toLowerCase()}">${entry.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${entry.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateBilling() {
+            const tableBody = document.getElementById('billingTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.billing.map(inv => `
+                    <tr>
+                        <td>${inv.id}</td>
+                        <td>${inv.patient}</td>
+                        <td>PKR ${inv.amount}</td>
+                        <td><span class="badge bg-${inv.insurance.toLowerCase()}">${inv.insurance}</span></td>
+                        <td>${inv.date}</td>
+                        <td><button class="btn btn-sm btn-primary">${inv.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateDepartments() {
+            const tableBody = document.getElementById('departmentsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.departments.map(dept => `
+                    <tr>
+                        <td>${dept.name}</td>
+                        <td>${dept.head}</td>
+                        <td>${dept.staff}</td>
+                        <td>${dept.allocation}</td>
+                        <td><span class="badge bg-${dept.status.toLowerCase()}">${dept.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${dept.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateStaff() {
+            const tableBody = document.getElementById('staffTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.staff.map(member => `
+                    <tr>
+                        <td>${member.name}</td>
+                        <td>${member.role}</td>
+                        <td>${member.department}</td>
+                        <td>${member.schedule}</td>
+                        <td><span class="badge bg-${member.status.toLowerCase()}">${member.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${member.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateDocuments() {
+            const tableBody = document.getElementById('documentsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.documents.map(doc => `
+                    <tr>
+                        <td>${doc.name}</td>
+                        <td>${doc.patient}</td>
+                        <td>${doc.type}</td>
+                        <td>${doc.date}</td>
+                        <td>${doc.access}</td>
+                        <td><button class="btn btn-sm btn-info">${doc.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateReports() {
+            // Assuming a reports table if added
+            const tableBody = document.getElementById('reportsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.reports.map(report => `
+                    <tr>
+                        <td>${report.report}</td>
+                        <td>${report.date}</td>
+                        <td><span class="badge bg-success">${report.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${report.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateNotifications() {
+            const dropdown = document.getElementById('notificationsDropdown');
+            if (dropdown) {
+                dropdown.innerHTML = mockData.notifications.map(notif => `
+                    <div class="notification-item ${notif.read ? 'read' : ''}">
+                        <div>${notif.message}</div>
+                        <small class="text-muted">${notif.time}</small>
+                    </div>
+                `).join('');
+            }
+            const count = document.getElementById('notificationCount');
+            if (count) {
+                const unread = mockData.notifications.filter(n => !n.read).length;
+                count.textContent = unread || '';
+                count.style.display = unread > 0 ? 'inline' : 'none';
+            }
+        }
+
+        function populateStaffTasks() {
+            const tableBody = document.getElementById('staffTasks');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.staffTasks.map(task => `
+                    <tr>
+                        <td>${task.task}</td>
+                        <td><span class="badge bg-${task.priority.toLowerCase()}">${task.priority}</span></td>
+                        <td><span class="badge bg-${task.status.toLowerCase()}">${task.status}</span></td>
+                        <td><button class="btn btn-sm btn-success">${task.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateCareTips() {
+            const list = document.getElementById('careTips');
+            if (list) {
+                list.innerHTML = mockData.careTips.map(tip => `<li>${tip}</li>`).join('');
+            }
+        }
+
+        function populateActivityTable() {
+            const tableBody = document.getElementById('activityTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.activityTable.map(row => `
+                    <tr>
+                        <td>${row.date}</td>
+                        <td>${row.steps}</td>
+                        <td>${row.calories}</td>
+                        <td><span class="badge bg-success">${row.progress}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateIntegrationsList() {
+            const list = document.getElementById('integrationsList');
+            if (list) {
+                list.innerHTML = mockData.integrationsList.map(integ => `<li>${integ}</li>`).join('');
+            }
+        }
+
+        function populateRevenueTable() {
+            const tableBody = document.getElementById('revenueTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.revenueTable.map(row => `
+                    <tr>
+                        <td>${row.org}</td>
+                        <td>${row.revenue}</td>
+                        <td><span class="badge bg-${row.status.toLowerCase()}">${row.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateTodaySchedule() {
+            const tableBody = document.getElementById('todaySchedule');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.todaySchedule.map(sched => `
+                    <tr>
+                        <td>${sched.patient}</td>
+                        <td>${sched.time}</td>
+                        <td>${sched.duration}</td>
+                        <td><span class="badge bg-info">${sched.type}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Charts Initialization
+        function initializeCharts() {
+            // Onboarding Chart
+            const onboardingCtx = document.getElementById('onboardingChart');
+            if (onboardingCtx) {
+                charts.onboarding = new Chart(onboardingCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                        datasets: [{
+                            label: 'New Clients',
+                            data: [12, 19, 3, 5, 2, 3, 7, 12, 5],
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                });
+            }
+
+            // Department Chart
+            const deptCtx = document.getElementById('departmentChart');
+            if (deptCtx) {
+                charts.department = new Chart(deptCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Cardiology', 'Neurology', 'Pediatrics'],
+                        datasets: [{
+                            data: [45, 30, 25],
+                            backgroundColor: ['#007bff', '#28a745', '#ffc107']
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+
+            // Patient History Chart
+            const patientHistoryCtx = document.getElementById('patientHistoryChart');
+            if (patientHistoryCtx) {
+                charts.patientHistory = new Chart(patientHistoryCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar'],
+                        datasets: [{
+                            label: 'Visits',
+                            data: [65, 59, 80],
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)'
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                });
+            }
+
+            // Patient Health Chart
+            const patientHealthCtx = document.getElementById('patientHealthChart');
+            if (patientHealthCtx) {
+                charts.patientHealth = new Chart(patientHealthCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                        datasets: [{
+                            label: 'Blood Pressure',
+                            data: [120, 118, 122, 119],
+                            borderColor: '#dc3545',
+                            tension: 0.1
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: false } } }
+                });
+            }
+
+            // Monitoring Chart
+            const monitoringCtx = document.getElementById('monitoringChart');
+            if (monitoringCtx) {
+                charts.monitoring = new Chart(monitoringCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                        datasets: [{
+                            label: 'Heart Rate',
+                            data: [72, 74, 70, 75, 73],
+                            borderColor: '#28a745',
+                            tension: 0.1
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: false } } }
+                });
+            }
+
+            // Fitness Chart
+            const fitnessCtx = document.getElementById('fitnessChart');
+            if (fitnessCtx) {
+                charts.fitness = new Chart(fitnessCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Steps', 'Calories'],
+                        datasets: [{
+                            data: [10000, 500],
+                            backgroundColor: ['#007bff', '#28a745']
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                });
+            }
+
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                charts.revenue = new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Revenue (PKR)',
+                            data: [120000, 190000, 300000, 500000, 200000, 300000],
+                            borderColor: '#007bff',
+                            tension: 0.1
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        }
+
+        // Real-Time Features Setup (Mock)
+        function setupRealTimeFeatures() {
+            // Simulate real-time notifications
+            setInterval(() => {
+                if (Math.random() > 0.8) {
+                    mockData.notifications.unshift({
+                        id: Date.now(),
+                        message: `New update: Patient ${['John', 'Emily'][Math.floor(Math.random()*2)]} checked in`,
+                        time: 'Just now',
+                        read: false
+                    });
+                    populateNotifications();
+                }
+            }, 30000); // Every 30 seconds
+
+            // Simulate data refresh
+            setInterval(populateAllSections, 60000); // Every minute
+        }
+
+        // Search Functionality
+        function handleGlobalSearch(e) {
+            const query = e.target.value.toLowerCase();
+            // Highlight search results across sections
+            document.querySelectorAll('.content-section td, .content-section li').forEach(el => {
+                el.innerHTML = el.innerHTML.replace(/<mark>/g, '').replace(/<\/mark>/g, '');
+                if (el.textContent.toLowerCase().includes(query)) {
+                    el.innerHTML = el.innerHTML.replace(new RegExp(query, 'gi'), '<mark>$&</mark>');
+                }
+            });
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Sidebar Toggle
+        function handleToggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            sidebar.classList.toggle('show');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // Notifications
+        function toggleNotifications(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('notificationsDropdown');
+            dropdown.classList.toggle('show');
+            // Mark as read
+            mockData.notifications.forEach(n => n.read = true);
+            populateNotifications();
+        }
+
+        function handleOutsideClick(e) {
+            const dropdown = document.getElementById('notificationsDropdown');
+            const bell = document.getElementById('notificationBell');
+            if (!dropdown.contains(e.target) && !bell.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        }
+
+        // Multi-Step Modals
+        function setupDoctorModal() {
+            const nextBtn = document.getElementById('nextStep');
+            const prevBtn = document.getElementById('prevStep');
+            const saveBtn = document.getElementById('saveDoctor');
+            const stepper = document.getElementById('doctorStepper');
+
+            nextBtn.addEventListener('click', () => {
+                if (currentStep < 3) {
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.add('hidden');
+                    document.querySelector(`[data-step="${currentStep}"] .step`).classList.remove('active');
+                    currentStep++;
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.remove('hidden');
+                    document.querySelector(`[data-step="${currentStep}"] .step`).classList.add('active');
+                    if (currentStep === 3) {
+                        saveBtn.style.display = 'inline-block';
+                        nextBtn.style.display = 'none';
+                    }
+                    prevBtn.style.display = currentStep > 1 ? 'inline-block' : 'none';
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.add('hidden');
+                    document.querySelector(`[data-step="${currentStep}"] .step`).classList.remove('active');
+                    currentStep--;
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.remove('hidden');
+                    document.querySelector(`[data-step="${currentStep}"] .step`).classList.add('active');
+                    saveBtn.style.display = currentStep === 3 ? 'inline-block' : 'none';
+                    nextBtn.style.display = currentStep < 3 ? 'inline-block' : 'none';
+                    prevBtn.style.display = currentStep > 1 ? 'inline-block' : 'none';
+                }
+            });
+
+            saveBtn.addEventListener('click', () => {
+                showAlert('Doctor added successfully!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('addDoctorModal')).hide();
+                currentStep = 1;
+                // Reset stepper
+                stepper.querySelectorAll('.step').forEach((step, idx) => {
+                    step.classList.toggle('active', idx + 1 === 1);
+                    step.classList.toggle('completed', idx + 1 < 1);
+                });
+                document.querySelectorAll('.step-content').forEach(content => content.classList.add('hidden'));
+                document.querySelector('[data-step="1"]').classList.remove('hidden');
+                nextBtn.style.display = 'inline-block';
+                saveBtn.style.display = 'none';
+                prevBtn.style.display = 'none';
+                document.getElementById('addDoctorForm').reset();
+            });
+        }
+
+        function setupPatientModal() {
+            const nextBtn = document.getElementById('patientNext');
+            const prevBtn = document.getElementById('patientPrev');
+            const saveBtn = document.getElementById('savePatient');
+            const stepper = document.querySelector('#addPatientModal .stepper');
+
+            nextBtn.addEventListener('click', () => {
+                if (currentPatientStep < 2) {
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"]').classList.add('hidden');
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"].step').classList.remove('active');
+                    currentPatientStep++;
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"]').classList.remove('hidden');
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"].step').classList.add('active');
+                    if (currentPatientStep === 2) {
+                        saveBtn.style.display = 'inline-block';
+                        nextBtn.style.display = 'none';
+                    }
+                    prevBtn.style.display = currentPatientStep > 1 ? 'inline-block' : 'none';
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentPatientStep > 1) {
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"]').classList.add('hidden');
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"].step').classList.remove('active');
+                    currentPatientStep--;
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"]').classList.remove('hidden');
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"].step').classList.add('active');
+                    saveBtn.style.display = currentPatientStep === 2 ? 'inline-block' : 'none';
+                    nextBtn.style.display = currentPatientStep < 2 ? 'inline-block' : 'none';
+                    prevBtn.style.display = currentPatientStep > 1 ? 'inline-block' : 'none';
+                }
+            });
+
+            saveBtn.addEventListener('click', () => {
+                showAlert('Patient registered successfully!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('addPatientModal')).hide();
+                currentPatientStep = 1;
+                // Reset stepper
+                stepper.querySelectorAll('.step').forEach((step, idx) => {
+                    step.classList.toggle('active', idx + 1 === 1);
+                });
+                document.querySelectorAll('#addPatientModal .step-content').forEach(content => content.classList.add('hidden'));
+                document.querySelector('#addPatientModal [data-step="1"]').classList.remove('hidden');
+                nextBtn.style.display = 'inline-block';
+                saveBtn.style.display = 'none';
+                prevBtn.style.display = 'none';
+                document.getElementById('addPatientForm').reset();
+            });
+        }
+
+        // Form Handlers
+        function setupFormHandlers() {
+            // Generic form handler for modals
+            const forms = document.querySelectorAll('form[id$="Form"]');
+            forms.forEach(form => {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // Simulate form submission
+                    showAlert(`${form.id.replace('Form', '')} saved successfully!`, 'success');
+                    bootstrap.Modal.getInstance(form.closest('.modal')).hide();
+                    form.reset();
+                });
+            });
+        }
+
+        // Filter Handlers
+        function setupFilterHandlers() {
+            // Generic filter function
+            window.filterOrganizations = () => filterTable('organizationsTable', document.getElementById('orgSearch').value, document.getElementById('orgStatus').value);
+            window.filterDoctors = () => filterTable('doctorsTable', document.getElementById('doctorSearch').value, document.getElementById('doctorStatus').value);
+            window.filterPatients = () => filterTable('patientsTable', document.getElementById('patientSearch').value, document.getElementById('patientStatus').value);
+            window.filterAppointments = () => filterTable('appointmentsTable', document.getElementById('appointmentSearch').value);
+            window.filterPrescriptions = () => filterTable('prescriptionsTable', document.getElementById('prescriptionSearch').value);
+            window.filterLabs = () => filterTable('labTable', document.getElementById('labSearch').value, document.getElementById('labStatus').value);
+        }
+
+        function filterTable(tableId, searchQuery, statusFilter = 'All') {
+            const table = document.getElementById(tableId);
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const statusCell = row.querySelector('td:last-child span') ? row.querySelector('td:last-child span').textContent : '';
+                const matchesSearch = text.includes(searchQuery.toLowerCase());
+                const matchesStatus = statusFilter === 'All' || statusCell.includes(statusFilter);
+                row.style.display = matchesSearch && matchesStatus ? '' : 'none';
+            });
+        }
+
+        // Action Functions (Mock)
+        window.onboardOrg = () => {
+            showAlert('Organization onboarded successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('onboardOrgModal')).hide();
+            document.getElementById('onboardForm').reset();
+            populateOrganizations(); // Refresh data
+        };
+
+        window.orderTest = () => {
+            showAlert('Test ordered successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('orderTestModal')).hide();
+            document.getElementById('testForm').reset();
+            populateLaboratory();
+        };
+
+        window.saveAppointment = () => {
+            showAlert('Appointment scheduled successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('scheduleAppointmentModal')).hide();
+            document.getElementById('scheduleForm').reset();
+            populateAppointments();
+        };
+
+        window.savePrescription = () => {
+            showAlert('Prescription generated successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addPrescriptionModal')).hide();
+            document.getElementById('prescriptionForm').reset();
+            populatePrescriptions();
+        };
+
+        window.saveAmbulanceRequest = () => {
+            showAlert('Ambulance request submitted!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('newAmbulanceModal')).hide();
+            document.getElementById('ambulanceForm').reset();
+            populateAmbulance();
+        };
+
+        window.savePharmacyItem = () => {
+            showAlert('Pharmacy item added!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addPharmacyItemModal')).hide();
+            document.getElementById('pharmacyForm').reset();
+            populatePharmacy();
+        };
+
+        window.saveBloodEntry = () => {
+            showAlert('Blood entry added!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addBloodEntryModal')).hide();
+            document.getElementById('bloodForm').reset();
+            populateBloodBank();
+        };
+
+        window.saveInvoice = () => {
+            showAlert('Invoice created!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('newInvoiceModal')).hide();
+            document.getElementById('invoiceForm').reset();
+            populateBilling();
+        };
+
+        window.saveDepartment = () => {
+            showAlert('Department added!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addDepartmentModal')).hide();
+            document.getElementById('departmentForm').reset();
+            populateDepartments();
+        };
+
+        window.saveInventoryItem = () => {
+            showAlert('Inventory item added!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addInventoryItemModal')).hide();
+            document.getElementById('inventoryForm').reset();
+            populateInventory();
+        };
+
+        window.saveStaff = () => {
+            showAlert('Staff member added!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addStaffModal')).hide();
+            document.getElementById('staffForm').reset();
+            populateStaff();
+        };
+
+        window.saveSession = () => {
+            showAlert('Session scheduled!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('scheduleSessionModal')).hide();
+            document.getElementById('sessionForm').reset();
+        };
+
+        window.uploadDocument = () => {
+            showAlert('Document uploaded and OCR processed!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('uploadDocumentModal')).hide();
+            document.getElementById('documentForm').reset();
+            populateDocuments();
+        };
+
+        window.saveEditProfile = () => {
+            showAlert('Profile updated!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('editProfileModal')).hide();
+        };
+
+        window.onboardClient = () => {
+            showAlert('New client onboarding started!', 'info');
+            // Trigger modal or process
+        };
+
+        window.runSymptomChecker = () => {
+            const input = document.getElementById('symptomInput').value;
+            document.getElementById('triageResults').innerHTML = input ? `<p class="text-info">Based on symptoms: ${input}, recommended: Consult doctor for chest pain.</p>` : '<p class="text-warning">Please describe symptoms.</p>';
+        };
+
+        window.recommendTests = () => {
+            const patient = document.getElementById('patientForRec').value;
+            document.getElementById('testRecs').innerHTML = patient ? '<li>Blood Glucose Test</li><li>Cholesterol Panel</li>' : '<li>Select a patient first.</li>';
+        };
+
+        window.syncFitnessData = () => {
+            showAlert('Fitness data synced successfully!', 'success');
+        };
+
+        window.generateReport = () => {
+            const type = document.getElementById('reportType').value;
+            const start = document.getElementById('reportStart').value;
+            const end = document.getElementById('reportEnd').value;
+            showAlert(`Report "${type}" generated for ${start} to ${end}!`, 'success');
+            // Simulate download
+        };
+
+        window.manageIntegrations = () => {
+            showAlert('Integration management opened!', 'info');
+        };
+
+        window.setupNotifications = () => {
+            showAlert('Notification setup configured!', 'success');
+        };
+
+        // Utility Functions
+        function showAlert(message, type = 'info') {
+            // Simple alert for demo
+            alert(`${type.toUpperCase()}: ${message}`);
+            // In production, use Bootstrap toast or similar
+        }
+
+        function handleWindowResize() {
+            // Adjust sidebar on resize
+            if (window.innerWidth > 768) {
+                document.getElementById('sidebar').classList.remove('show');
+                document.getElementById('mainContent').classList.remove('expanded');
+            }
+        }
+
+        function handleKeyboardShortcuts(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'k':
+                        e.preventDefault();
+                        document.getElementById('globalSearch').focus();
+                        break;
+                    case 'n':
+                        e.preventDefault();
+                        // Open new patient modal
+                        new bootstrap.Modal(document.getElementById('addPatientModal')).show();
+                        break;
+                }
+            }
+        }
+
+        // AI Mock Functions
+        window.inithealthassistant = () => {
+            document.getElementById('wellnessTips').innerHTML = '<p>Stay hydrated and get 8 hours of sleep!</p>';
+            // Populate patient select
+            const select = document.getElementById('patientForRec');
+            select.innerHTML = '<option>John Smith</option><option>Emily Davis</option>';
+        };
+    </script>
+</body>
+</html>
