@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedixPro - Hospital Management System</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>MedixPro - Digital Health & Fitness Management System</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom CSS -->
     <style>
         :root {
             --primary-color: #007bff;
@@ -53,14 +56,21 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            color: var(--white);
+            color: white;
             font-size: 1.3rem;
             font-weight: bold;
         }
-
         .logo i {
             font-size: 1.7rem;
             color: var(--secondary);
+        }
+        .nav-group-header {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .nav-item {
             padding: 10px 20px;
@@ -310,6 +320,56 @@
         .hidden {
             display: none !important;
         }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        .col-md-6, .col-md-12 {
+            position: relative;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        @media (min-width: 768px) {
+            .col-md-6 {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+            .col-md-12 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+        .text-success { color: var(--success-color) !important; }
+        .text-danger { color: var(--danger-color) !important; }
+        .text-info { color: var(--info-color) !important; }
+        .text-warning { color: var(--warning-color) !important; }
+        .badge {
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+        }
+        .badge.bg-success { background-color: var(--success-color); }
+        .badge.bg-danger { background-color: var(--danger-color); }
+        .badge.bg-warning { background-color: var(--warning-color); }
+        .badge.bg-info { background-color: var(--info-color); }
+        .badge.bg-secondary { background-color: var(--secondary-color); }
+        .badge.bg-primary { background-color: var(--primary-color); }
+        .list-unstyled {
+            padding-left: 0;
+            list-style: none;
+        }
+        ul.list-unstyled li {
+            padding: 5px 0;
+        }
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -342,71 +402,109 @@
                 display: block;
             }
         }
+        .search-highlight {
+            background-color: yellow;
+        }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fas fa-hospital"></i>
-                    <span>MedixPro</span>
-                </div>
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-hospital"></i>
+                <span>MedixPro</span>
             </div>
+        </div>
         <div class="nav-items">
-            <div class="nav-item active" data-section="admin-dashboard">
-                <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+            <!-- Role-Based Dashboards (Hierarchical Structure) -->
+            <div class="nav-group-header">Dashboards</div>
+            <div class="nav-item active" data-section="super-admin-dashboard">
+                <i class="fas fa-user-shield"></i> Super Admin Dashboard
+            </div>
+            <div class="nav-item" data-section="org-admin-dashboard">
+                <i class="fas fa-building-user"></i> Organization Admin Dashboard
             </div>
             <div class="nav-item" data-section="doctor-dashboard">
                 <i class="fas fa-user-md"></i> Doctor Dashboard
             </div>
+            <div class="nav-item" data-section="staff-dashboard">
+                <i class="fas fa-user-tie"></i> Support Staff Dashboard
+            </div>
             <div class="nav-item" data-section="patient-dashboard">
-                <i class="fas fa-user"></i> Patient Dashboard
+                <i class="fas fa-user"></i> Patient Portal
+            </div>
+
+            <!-- Phase 1: Onboarding and Setup -->
+            <div class="nav-group-header">Onboarding & Setup</div>
+            <div class="nav-item" data-section="organizations">
+                <i class="fas fa-clinic-medical"></i> Organizations & Clients
+            </div>
+            <div class="nav-item" data-section="departments">
+                <i class="fas fa-building"></i> Departments
             </div>
             <div class="nav-item" data-section="doctors">
-                <i class="fas fa-users"></i> Doctors
+                <i class="fas fa-users"></i> Doctors Management
             </div>
+            <div class="nav-item" data-section="staff">
+                <i class="fas fa-user-tie"></i> Staff Management
+            </div>
+            <div class="nav-item" data-section="settings">
+                <i class="fas fa-cog"></i> System Settings
+            </div>
+
+            <!-- Phase 2: Daily Operations Management -->
+            <div class="nav-group-header">Daily Operations</div>
             <div class="nav-item" data-section="patients">
-                <i class="fas fa-user-injured"></i> Patients
+                <i class="fas fa-user-injured"></i> Patient Management
             </div>
             <div class="nav-item" data-section="appointments">
-                <i class="fas fa-calendar-check"></i> Appointments
+                <i class="fas fa-calendar-check"></i> Appointments & Scheduling
             </div>
+
+            <!-- Phase 3: Clinical and Administrative Support -->
+            <div class="nav-group-header">Clinical & Admin Support</div>
             <div class="nav-item" data-section="prescriptions">
                 <i class="fas fa-prescription-bottle-alt"></i> Prescriptions
             </div>
-            <div class="nav-item" data-section="ambulance">
-                <i class="fas fa-ambulance"></i> Ambulance
+            <div class="nav-item" data-section="laboratory">
+                <i class="fas fa-vial"></i> Laboratory & Tests
             </div>
             <div class="nav-item" data-section="pharmacy">
                 <i class="fas fa-pills"></i> Pharmacy
+            </div>
+            <div class="nav-item" data-section="inventory">
+                <i class="fas fa-boxes"></i> Inventory Management
+            </div>
+            <div class="nav-item" data-section="ambulance">
+                <i class="fas fa-ambulance"></i> Ambulance Coordination
             </div>
             <div class="nav-item" data-section="blood-bank">
                 <i class="fas fa-tint"></i> Blood Bank
             </div>
             <div class="nav-item" data-section="billing">
-                <i class="fas fa-dollar-sign"></i> Billing
+                <i class="fas fa-dollar-sign"></i> Billing & Financials
             </div>
-            <div class="nav-item" data-section="departments">
-                <i class="fas fa-building"></i> Departments
-            </div>
-            <div class="nav-item" data-section="inventory">
-                <i class="fas fa-boxes"></i> Inventory
-            </div>
-            <div class="nav-item" data-section="staff">
-                <i class="fas fa-user-tie"></i> Staff
-            </div>
+
+            <!-- Phase 4: Health and Wellness Integration -->
+            <div class="nav-group-header">Health & Wellness</div>
             <div class="nav-item" data-section="telehealth">
                 <i class="fas fa-video"></i> Telehealth
             </div>
+            <div class="nav-item" data-section="health-assistant">
+                <i class="fas fa-robot"></i> AI Health Assistant
+            </div>
+            <div class="nav-item" data-section="fitness">
+                <i class="fas fa-dumbbell"></i> Fitness Tracking
+            </div>
+
+            <!-- Phase 5: Analytics and Reporting -->
+            <div class="nav-group-header">Analytics & Reports</div>
             <div class="nav-item" data-section="documents">
-                <i class="fas fa-file-medical"></i> Documents
+                <i class="fas fa-file-medical"></i> Documents & EHR
             </div>
             <div class="nav-item" data-section="reports">
-                <i class="fas fa-chart-bar"></i> Reports
-            </div>
-            <div class="nav-item" data-section="settings">
-                <i class="fas fa-cog"></i> Settings
+                <i class="fas fa-chart-bar"></i> Analytics & Reports
             </div>
         </div>
     </div>
@@ -437,14 +535,82 @@
         </div>
 
         <!-- Content Sections -->
-        <!-- Admin Dashboard -->
-        <section id="admin-dashboard" class="content-section">
-            <h2>Admin Dashboard</h2>
+        <!-- Super Admin Dashboard (Global Oversight) -->
+        <section id="super-admin-dashboard" class="content-section">
+            <h2>Super Admin Dashboard</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-users card-icon text-primary"></i>
+                    <h4>Total Organizations</h4>
+                    <div class="card-value">45</div>
+                    <div class="card-change">+5 new this month</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-dollar-sign card-icon text-success"></i>
+                    <h4>Global Revenue</h4>
+                    <div class="card-value">PKR 1,250,000</div>
+                    <div class="card-change">+18.5% from last month</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-chart-line card-icon text-info"></i>
+                    <h4>System Usage</h4>
+                    <div class="card-value">92%</div>
+                    <div class="card-change">Active users</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-cog card-icon text-warning"></i>
+                    <h4>Subscriptions</h4>
+                    <div class="card-value">38 Active</div>
+                    <div class="card-change">7 trials</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Client Onboarding Trends</h5>
+                        <canvas id="onboardingChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Revenue by Organization</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Organization</th>
+                                        <th>Revenue</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="revenueTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-container">
+                        <h5>System Analytics</h5>
+                        <p><strong>Uptime:</strong> 99.8% <span class="text-success">Stable</span></p>
+                        <p><strong>Error Rate:</strong> 0.2% <span class="text-danger">Monitor</span></p>
+                        <button class="btn btn-primary" onclick="onboardClient()">Onboard New Client</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Organization Admin Dashboard (Organizational Control) -->
+        <section id="org-admin-dashboard" class="content-section hidden">
+            <h2>Organization Admin Dashboard</h2>
             <div class="dashboard-cards">
                 <div class="card">
                     <i class="fas fa-dollar-sign card-icon text-primary"></i>
-                    <h4>Total Revenue</h4>
-                    <div class="card-value">$52,456.23</div>
+                    <h4>Organization Revenue</h4>
+                    <div class="card-value">PKR 52,456</div>
                     <div class="card-change">+15.2% from last month</div>
                 </div>
                 <div class="card">
@@ -469,102 +635,45 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="chart-container">
-                        <h5>Recent Appointments</h5>
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Patient</th>
-                                        <th>Type</th>
-                                        <th>Time</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recentAppointments">
-                                    <!-- Populated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
+                        <h5>Department Utilization</h5>
+                        <canvas id="departmentChart"></canvas>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="chart-container">
-                        <h5>Patient Visits - Last 7 Days</h5>
-                        <canvas id="visitsChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="chart-container">
-                        <h5>Analytics</h5>
-                        <p><strong>No-Show Rate:</strong> 4.2% <span class="text-success">(-0.8% from last month)</span></p>
-                        <p><strong>Average Wait Time:</strong> 12 min <span class="text-success">(-4 min from last month)</span></p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="chart-container">
-                        <h5>Reports</h5>
-                        <select id="reportType" class="form-select mb-2">
-                            <option>Monthly Revenue</option>
-                            <option>Patient Demographics</option>
-                            <option>Appointment Statistics</option>
-                            <option>Staff Performance</option>
-                            <option>Inventory Trends</option>
-                        </select>
-                        <div class="row mb-2">
-                            <div class="col">
-                                <input type="date" id="reportStart" class="form-control">
-                            </div>
-                            <div class="col">
-                                <input type="date" id="reportEnd" class="form-control">
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
-                        <div class="table-responsive mt-3">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Report</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="reportsTable">
-                                    <!-- Populated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
+                        <h5>Recent Integrations</h5>
+                        <ul id="integrationsList" class="list-unstyled">
+                            <!-- Populated by JS -->
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Doctor Dashboard -->
+        <!-- Doctor Dashboard (Consultation Focus) -->
         <section id="doctor-dashboard" class="content-section hidden">
             <h2>Doctor Dashboard</h2>
             <div class="dashboard-cards">
                 <div class="card">
                     <i class="fas fa-calendar-check card-icon text-primary"></i>
-                    <h4>Appointments</h4>
+                    <h4>Today's Appointments</h4>
                     <div class="card-value">15</div>
                     <div class="card-change">4 urgent</div>
                     <button class="btn btn-sm btn-primary mt-2">View Schedule</button>
                 </div>
                 <div class="card">
                     <i class="fas fa-file-medical card-icon text-success"></i>
-                    <h4>Pending Reports</h4>
+                    <h4>Pending Prescriptions</h4>
                     <div class="card-value">9</div>
-                    <div class="card-change">3 ready</div>
-                    <button class="btn btn-sm btn-success mt-2">Review Reports</button>
+                    <div class="card-change">3 approved</div>
+                    <button class="btn btn-sm btn-success mt-2">Manage Prescriptions</button>
                 </div>
                 <div class="card">
                     <i class="fas fa-users card-icon text-info"></i>
                     <h4>Active Patients</h4>
                     <div class="card-value">156</div>
                     <div class="card-change">10 new</div>
-                    <button class="btn btn-sm btn-info mt-2">Patient Records</button>
+                    <button class="btn btn-sm btn-info mt-2">View Records</button>
                 </div>
                 <div class="card">
                     <i class="fas fa-tasks card-icon text-warning"></i>
@@ -597,18 +706,61 @@
                 </div>
                 <div class="col-md-6">
                     <div class="chart-container">
-                        <h5>Upcoming Appointments</h5>
+                        <h5>Patient Histories Overview</h5>
+                        <canvas id="patientHistoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Support Staff Dashboard (Operational Focus) -->
+        <section id="staff-dashboard" class="content-section hidden">
+            <h2>Support Staff Dashboard</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-calendar-check card-icon text-primary"></i>
+                    <h4>Pending Appointments</h4>
+                    <div class="card-value">25</div>
+                    <div class="card-change">10 walk-ins</div>
+                    <button class="btn btn-sm btn-primary mt-2">Schedule</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-dollar-sign card-icon text-success"></i>
+                    <h4>Pending Billings</h4>
+                    <div class="card-value">12</div>
+                    <div class="card-change">Total PKR 45,000</div>
+                    <button class="btn btn-sm btn-success mt-2">Process Payments</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-boxes card-icon text-info"></i>
+                    <h4>Low Inventory Alerts</h4>
+                    <div class="card-value">5 items</div>
+                    <div class="card-change">Reorder needed</div>
+                    <button class="btn btn-sm btn-info mt-2">Manage Inventory</button>
+                </div>
+                <div class="card">
+                    <i class="fas fa-vial card-icon text-warning"></i>
+                    <h4>Lab Requests</h4>
+                    <div class="card-value">8</div>
+                    <div class="card-change">3 urgent</div>
+                    <button class="btn btn-sm btn-warning mt-2">Coordinate Tests</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="chart-container">
+                        <h5>Daily Queue Management</h5>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Patient</th>
-                                        <th>Date & Time</th>
+                                        <th>Task</th>
+                                        <th>Priority</th>
                                         <th>Status</th>
-                                        <th>Type</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="upcomingAppointments">
+                                <tbody id="staffTasks">
                                     <!-- Populated by JS -->
                                 </tbody>
                             </table>
@@ -618,22 +770,22 @@
             </div>
         </section>
 
-        <!-- Patient Dashboard -->
+        <!-- Patient Portal (Health Tracking Focus) -->
         <section id="patient-dashboard" class="content-section hidden">
-            <h2>Patient Dashboard</h2>
+            <h2>Patient Portal</h2>
             <div class="dashboard-cards">
                 <div class="card">
                     <i class="fas fa-calendar-check card-icon text-primary"></i>
                     <h4>Next Appointment</h4>
-                    <div class="card-value">Tomorrow 10:30 AM with Dr. Johnson</div>
-                    <button class="btn btn-sm btn-primary mt-2">View Details</button>
+                    <div class="card-value">Tomorrow 10:30 AM with Dr. Ahmed</div>
+                    <button class="btn btn-sm btn-primary mt-2">Book/ Reschedule</button>
                 </div>
                 <div class="card">
                     <i class="fas fa-pills card-icon text-success"></i>
                     <h4>Medications</h4>
                     <div class="card-value">3 Active</div>
                     <div class="card-change">Next dose in 1 hour</div>
-                    <button class="btn btn-sm btn-success mt-2">View All</button>
+                    <button class="btn btn-sm btn-success mt-2">View Reminders</button>
                 </div>
                 <div class="card">
                     <i class="fas fa-vial card-icon text-info"></i>
@@ -645,9 +797,9 @@
                 <div class="card">
                     <i class="fas fa-credit-card card-icon text-warning"></i>
                     <h4>Billing</h4>
-                    <div class="card-value">$75.00</div>
+                    <div class="card-value">PKR 5,000</div>
                     <div class="card-change">Due in 10 days</div>
-                    <button class="btn btn-sm btn-warning mt-2">Make Payment</button>
+                    <button class="btn btn-sm btn-warning mt-2">Pay Now</button>
                 </div>
             </div>
             <div class="health-summary">
@@ -667,22 +819,58 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="chart-container">
-                        <h5>Medication Reminders</h5>
-                        <ul class="list-unstyled" id="medicationReminders">
-                            <!-- Populated by JS -->
+                        <h5>Preventive Care Recommendations</h5>
+                        <ul class="list-unstyled" id="careTips">
+                            <!-- Populated by JS from AI -->
                         </ul>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="chart-container">
-                        <h5>Health Tips</h5>
-                        <ul class="list-unstyled">
-                            <li>Heart Health: Aim for 30 minutes of exercise daily.</li>
-                            <li>Stress Management: Practice mindfulness for 10 minutes.</li>
-                            <li>Nutrition: Eat more fruits and vegetables.</li>
-                        </ul>
+                        <h5>Health History Chart</h5>
+                        <canvas id="patientHealthChart"></canvas>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Organizations & Clients (Super Admin Onboarding) -->
+        <section id="organizations" class="content-section hidden">
+            <h2>Organizations & Client Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#onboardOrgModal">Onboard New Organization</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="orgSearch" placeholder="Search Organizations...">
+                </div>
+                <div class="col-auto">
+                    <select id="orgStatus" class="form-select">
+                        <option>All</option>
+                        <option>Active</option>
+                        <option>Trial</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-secondary" onclick="filterOrganizations()">Apply Filters</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type (Clinic/Hospital)</th>
+                            <th>Subscription Tier</th>
+                            <th>Doctors</th>
+                            <th>Revenue</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="organizationsTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
             </div>
         </section>
 
@@ -702,12 +890,6 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <input type="date" id="doctorDateFrom" class="form-control">
-                </div>
-                <div class="col-auto">
-                    <input type="date" id="doctorDateTo" class="form-control">
-                </div>
-                <div class="col-auto">
                     <button class="btn btn-secondary" onclick="filterDoctors()">Apply Filters</button>
                 </div>
             </div>
@@ -717,10 +899,9 @@
                         <tr>
                             <th>Name</th>
                             <th>Specialty</th>
-                            <th>Status</th>
+                            <th>Department</th>
                             <th>Patients</th>
-                            <th>Experience</th>
-                            <th>Contact</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -733,8 +914,8 @@
 
         <!-- Patients Management -->
         <section id="patients" class="content-section hidden">
-            <h2>Patients Management</h2>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPatientModal">Add Patient</button>
+            <h2>Patient Management System</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPatientModal">Register New Patient</button>
             <div class="row mb-3">
                 <div class="col">
                     <input type="text" class="form-control" id="patientSearch" placeholder="Search Patients...">
@@ -747,12 +928,6 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <input type="date" id="patientDateFrom" class="form-control">
-                </div>
-                <div class="col-auto">
-                    <input type="date" id="patientDateTo" class="form-control">
-                </div>
-                <div class="col-auto">
                     <button class="btn btn-secondary" onclick="filterPatients()">Apply Filters</button>
                 </div>
             </div>
@@ -761,12 +936,11 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Age/Gender</th>
-                            <th>Status</th>
+                            <th>Demographics</th>
+                            <th>Medical History Summary</th>
                             <th>Last Visit</th>
-                            <th>Condition</th>
-                            <th>Doctor</th>
-                            <th>Actions</th>
+                            <th>Assigned Doctor</th>
+                            <th>Actions (EHR Access)</th>
                         </tr>
                     </thead>
                     <tbody id="patientsTable">
@@ -776,10 +950,10 @@
             </div>
         </section>
 
-        <!-- Appointments -->
+        <!-- Appointments & Scheduling -->
         <section id="appointments" class="content-section hidden">
-            <h2>Appointments</h2>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#scheduleAppointmentModal">New Appointment</button>
+            <h2>Appointment and Scheduling Engine</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#scheduleAppointmentModal">Schedule New Appointment</button>
             <div class="row mb-3">
                 <div class="col">
                     <input type="text" class="form-control" id="appointmentSearch" placeholder="Search Appointments...">
@@ -800,10 +974,10 @@
                         <tr>
                             <th>Patient</th>
                             <th>Doctor</th>
-                            <th>Date</th>
-                            <th>Time</th>
+                            <th>Date & Time</th>
                             <th>Duration</th>
-                            <th>Type</th>
+                            <th>Type (In-Person/Telehealth)</th>
+                            <th>Status (Reminder Sent)</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -816,8 +990,8 @@
 
         <!-- Prescriptions -->
         <section id="prescriptions" class="content-section hidden">
-            <h2>Prescriptions</h2>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPrescriptionModal">New Prescription</button>
+            <h2>Prescription Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPrescriptionModal">Generate New Prescription</button>
             <div class="row mb-3">
                 <div class="col">
                     <input type="text" class="form-control" id="prescriptionSearch" placeholder="Search Prescriptions...">
@@ -832,12 +1006,10 @@
                         <tr>
                             <th>Patient</th>
                             <th>Medication</th>
-                            <th>Dosage</th>
-                            <th>Frequency</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th>Dosage & Frequency</th>
+                            <th>Duration</th>
+                            <th>Pharmacy Status</th>
+                            <th>Actions (Print/Share)</th>
                         </tr>
                     </thead>
                     <tbody id="prescriptionsTable">
@@ -847,23 +1019,38 @@
             </div>
         </section>
 
-        <!-- Ambulance -->
-        <section id="ambulance" class="content-section hidden">
-            <h2>Ambulance Services</h2>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#newAmbulanceModal">New Request</button>
+        <!-- Laboratory & Tests -->
+        <section id="laboratory" class="content-section hidden">
+            <h2>Laboratory Test Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#orderTestModal">Order New Test</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="labSearch" placeholder="Search Tests...">
+                </div>
+                <div class="col-auto">
+                    <select id="labStatus" class="form-select">
+                        <option>All</option>
+                        <option>Pending</option>
+                        <option>Completed</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-secondary" onclick="filterLabs()">Apply Filters</button>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Request ID</th>
                             <th>Patient</th>
-                            <th>Location</th>
+                            <th>Test Type</th>
+                            <th>Ordered By</th>
+                            <th>Date Ordered</th>
                             <th>Status</th>
-                            <th>Time</th>
-                            <th>Actions</th>
+                            <th>Results (Upload/View)</th>
                         </tr>
                     </thead>
-                    <tbody id="ambulanceTable">
+                    <tbody id="labTable">
                         <!-- Populated by JS -->
                     </tbody>
                 </table>
@@ -872,16 +1059,17 @@
 
         <!-- Pharmacy -->
         <section id="pharmacy" class="content-section hidden">
-            <h2>Pharmacy</h2>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPharmacyItemModal">Add Item</button>
+            <h2>Pharmacy Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPharmacyItemModal">Add Medication</button>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Medication</th>
-                            <th>Stock</th>
-                            <th>Expiry</th>
-                            <th>Price</th>
+                            <th>Stock Level</th>
+                            <th>Expiry Date</th>
+                            <th>Price (PKR)</th>
+                            <th>Integration Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -892,18 +1080,65 @@
             </div>
         </section>
 
+        <!-- Inventory Management -->
+        <section id="inventory" class="content-section hidden">
+            <h2>Inventory Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addInventoryItemModal">Add Supply Item</button>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Supplier</th>
+                            <th>Expiry/Reorder Date</th>
+                            <th>Low Stock Alert</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Ambulance Coordination -->
+        <section id="ambulance" class="content-section hidden">
+            <h2>Ambulance Services</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#newAmbulanceModal">Request Ambulance</button>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Patient</th>
+                            <th>Pickup Location (Karachi Area)</th>
+                            <th>Status (En Route/Arrived)</th>
+                            <th>ETA</th>
+                            <th>Actions (Track)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ambulanceTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- Blood Bank -->
         <section id="blood-bank" class="content-section hidden">
-            <h2>Blood Bank</h2>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addBloodEntryModal">Add Entry</button>
+            <h2>Blood Bank Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addBloodEntryModal">Add Blood Entry</button>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Blood Type</th>
-                            <th>Quantity</th>
-                            <th>Donor</th>
-                            <th>Expiry</th>
+                            <th>Available Units</th>
+                            <th>Donor Info</th>
+                            <th>Expiry Date</th>
+                            <th>Request Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -914,25 +1149,25 @@
             </div>
         </section>
 
-        <!-- Billing -->
+        <!-- Billing & Financials -->
         <section id="billing" class="content-section hidden">
-            <h2>Billing & Invoices</h2>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#newInvoiceModal">New Invoice</button>
+            <h2>Financial Management</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#newInvoiceModal">Generate Invoice</button>
             <div class="dashboard-cards">
                 <div class="card">
                     <i class="fas fa-dollar-sign card-icon text-primary"></i>
                     <h4>Total Revenue</h4>
-                    <div class="card-value">$152,780</div>
+                    <div class="card-value">PKR 1,527,800</div>
                 </div>
                 <div class="card">
-                    <i class="fas fa-clock card-icon text-warning"></i>
-                    <h4>Pending Payments</h4>
-                    <div class="card-value">$9,450</div>
+                    <i class="fas fa-file-invoice card-icon text-warning"></i>
+                    <h4>Pending Claims (Insurance)</h4>
+                    <div class="card-value">15</div>
                 </div>
                 <div class="card">
                     <i class="fas fa-exclamation-triangle card-icon text-danger"></i>
-                    <h4>Overdue</h4>
-                    <div class="card-value">$3,200</div>
+                    <h4>Overdue Payments</h4>
+                    <div class="card-value">PKR 32,000</div>
                 </div>
             </div>
             <div class="table-responsive">
@@ -941,10 +1176,10 @@
                         <tr>
                             <th>Invoice ID</th>
                             <th>Patient</th>
-                            <th>Amount</th>
-                            <th>Status</th>
+                            <th>Amount (PKR)</th>
+                            <th>Insurance Claim Status</th>
                             <th>Date</th>
-                            <th>Actions</th>
+                            <th>Actions (Process/Pay)</th>
                         </tr>
                     </thead>
                     <tbody id="billingTable">
@@ -956,15 +1191,16 @@
 
         <!-- Departments -->
         <section id="departments" class="content-section hidden">
-            <h2>Departments</h2>
+            <h2>Department Management</h2>
             <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Add Department</button>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Department</th>
-                            <th>Head</th>
+                            <th>Department Name</th>
+                            <th>Head Doctor</th>
                             <th>Staff Count</th>
+                            <th>Resource Allocation</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -976,32 +1212,10 @@
             </div>
         </section>
 
-        <!-- Inventory -->
-        <section id="inventory" class="content-section hidden">
-            <h2>Inventory Management</h2>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addInventoryItemModal">Add Item</button>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Quantity</th>
-                            <th>Supplier</th>
-                            <th>Expiry</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventoryTable">
-                        <!-- Populated by JS -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Staff -->
+        <!-- Staff Management -->
         <section id="staff" class="content-section hidden">
             <h2>Staff Management</h2>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addStaffModal">Add Staff</button>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addStaffModal">Add Staff Member</button>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -1009,8 +1223,8 @@
                             <th>Name</th>
                             <th>Role</th>
                             <th>Department</th>
+                            <th>Schedule</th>
                             <th>Status</th>
-                            <th>Contact</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -1023,47 +1237,142 @@
 
         <!-- Telehealth -->
         <section id="telehealth" class="content-section hidden">
-            <h2>Telehealth</h2>
+            <h2>Telehealth Hub</h2>
             <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#scheduleSessionModal">Schedule Session</button>
             <div class="row text-center">
                 <div class="col-md-4">
                     <div class="card p-4">
                         <i class="fas fa-video fa-3x text-primary mb-3"></i>
-                        <h5>Connect to Video Call</h5>
-                        <button class="btn btn-primary mt-2">Join Call</button>
+                        <h5>Video Consultation</h5>
+                        <button class="btn btn-primary mt-2">Join/Start Call</button>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card p-4">
                         <i class="fas fa-comments fa-3x text-success mb-3"></i>
-                        <h5>Secure Chat</h5>
-                        <button class="btn btn-success mt-2">Start Chat</button>
+                        <h5>Secure Messaging</h5>
+                        <button class="btn btn-success mt-2">Open Chat</button>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card p-4">
                         <i class="fas fa-share fa-3x text-info mb-3"></i>
-                        <h5>Share Document</h5>
-                        <button class="btn btn-info mt-2">Upload</button>
+                        <h5>Document Sharing</h5>
+                        <button class="btn btn-info mt-2">Share Files</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="chart-container">
+                        <h5>Remote Monitoring (Chronic Care)</h5>
+                        <canvas id="monitoringChart"></canvas>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Documents -->
+        <!-- AI Health Assistant -->
+        <section id="health-assistant" class="content-section hidden">
+            <h2>AI-Powered Health Assistant</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h5>Symptom Checker</h5>
+                        <textarea class="form-control mb-2" id="symptomInput" placeholder="Describe symptoms..."></textarea>
+                        <button class="btn btn-primary" onclick="runSymptomChecker()">Check Symptoms</button>
+                        <div id="triageResults" class="mt-3"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h5>Test Recommendations</h5>
+                        <select class="form-select mb-2" id="patientForRec">
+                            <option>Select Patient</option>
+                        </select>
+                        <button class="btn btn-success" onclick="recommendTests()">Recommend Tests</button>
+                        <ul id="testRecs" class="mt-3 list-unstyled"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card p-4">
+                        <h5>Personalized Wellness Tips</h5>
+                        <div id="wellnessTips">
+                            <!-- Populated by JS/AI -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fitness Tracking -->
+        <section id="fitness" class="content-section hidden">
+            <h2>Fitness & Preventive Care</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h5>Integrate Wearable Devices</h5>
+                        <select class="form-select mb-2">
+                            <option>Fitbit</option>
+                            <option>Apple Health</option>
+                            <option>Google Fit</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="syncFitnessData()">Sync Data</button>
+                        <canvas id="fitnessChart" class="mt-3"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-4">
+                        <h5>Activity Tracking</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Steps</th>
+                                        <th>Calories</th>
+                                        <th>Goal Progress</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activityTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documents & EHR -->
         <section id="documents" class="content-section hidden">
-            <h2>Documents</h2>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#uploadDocumentModal">Upload & OCR</button>
-            <div class="text-center mb-4">
-                <button class="btn btn-outline-secondary" onclick="simulateOCR()">Simulate OCR</button>
+            <h2>Documents & Electronic Health Records</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#uploadDocumentModal">Upload Document</button>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" class="form-control" id="docSearch" placeholder="Search Documents...">
+                </div>
+                <div class="col-auto">
+                    <select id="docType" class="form-select">
+                        <option>All</option>
+                        <option>Test Results</option>
+                        <option>Imaging</option>
+                        <option>Reports</option>
+                    </select>
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>Document Name</th>
-                            <th>Date</th>
-                            <th>Actions</th>
+                            <th>Patient</th>
+                            <th>Type</th>
+                            <th>Upload Date</th>
+                            <th>Access Level</th>
+                            <th>Actions (View/Share)</th>
                         </tr>
                     </thead>
                     <tbody id="documentsTable">
@@ -1073,70 +1382,101 @@
             </div>
         </section>
 
-        <!-- Reports -->
+        <!-- Analytics & Reports -->
         <section id="reports" class="content-section hidden">
-            <h2>Reports & Analytics</h2>
-            <div class="chart-container">
-                <h5>Generate Report</h5>
-                <select id="analyticsReportType" class="form-select mb-2">
-                    <option>Patient Summary</option>
-                    <option>Revenue Report</option>
-                    <option>Appointment Analytics</option>
-                    <option>Appointment Statistics</option>
-                    <option>Inventory Status</option>
-                </select>
-                <div class="row mb-2">
-                    <div class="col">
-                        <input type="date" id="analyticsStart" class="form-control">
-                    </div>
-                    <div class="col">
-                        <input type="date" id="analyticsEnd" class="form-control">
+            <h2>Analytics and Reporting Dashboard</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <i class="fas fa-chart-bar card-icon text-primary"></i>
+                    <h4>Patient Outcomes</h4>
+                    <div class="card-value">95% Satisfaction</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-tachometer-alt card-icon text-success"></i>
+                    <h4>Operational Efficiency</h4>
+                    <div class="card-value">87%</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-coins card-icon text-info"></i>
+                    <h4>Resource Utilization</h4>
+                    <div class="card-value">76%</div>
+                </div>
+                <div class="card">
+                    <i class="fas fa-file-alt card-icon text-warning"></i>
+                    <h4>Quality Metrics</h4>
+                    <div class="card-value">4.2/5</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Revenue Trends</h5>
+                        <canvas id="revenueChart"></canvas>
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="generateAnalyticsReport()">Generate Report</button>
-                <canvas id="analyticsChart" height="300" class="mt-4"></canvas>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Generate Custom Report</h5>
+                        <select id="reportType" class="form-select mb-2">
+                            <option>Revenue Analytics</option>
+                            <option>Patient Outcomes</option>
+                            <option>Appointment Trends</option>
+                            <option>Resource Utilization</option>
+                            <option>Preventive Care Metrics</option>
+                        </select>
+                        <div class="row mb-2">
+                            <div class="col">
+                                <input type="date" id="reportStart" class="form-control">
+                            </div>
+                            <div class="col">
+                                <input type="date" id="reportEnd" class="form-control">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateReport()">Generate</button>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Settings -->
         <section id="settings" class="content-section hidden">
-            <h2>Settings</h2>
+            <h2>System Settings</h2>
             <div class="row">
                 <div class="col-md-6">
                     <div class="chart-container">
-                        <h5>Profile Settings</h5>
-                        <form id="profileForm">
+                        <h5>Role-Based Access Control</h5>
+                        <form id="roleForm">
                             <div class="mb-3">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" value="Dr. Johnson">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" value="dr.johnson@medixpro.com">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Phone</label>
-                                <input type="tel" class="form-control" value="+1 (555) 123-4567">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Role</label>
-                                <select class="form-select">
-                                    <option>Admin</option>
+                                <label class="form-label">User Role</label>
+                                <select class="form-select" id="userRole">
+                                    <option>Super Admin</option>
+                                    <option>Org Admin</option>
                                     <option>Doctor</option>
-                                    <option>Staff</option>
+                                    <option>Support Staff</option>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </form>
+                            <div class="mb-3">
+                                <label class="form-label">Permissions</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="ehrAccess">
+                                    <label class="form-check-label" for="ehrAccess">EHR Access</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="billingAccess">
+                                    <label class="form-check-label" for="billingAccess">Billing Access</label>
+                                </div>
+                                <!-- Additional permissions -->
+                                <button type="submit" class="btn btn-primary mt-2">Update Permissions</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
                 <div class="col-md-6">
                     <div class="chart-container">
-                        <h5>User Profile</h5>
-                        <p id="profileName"><strong>Name:</strong> Dr. Johnson</p>
-                        <p id="profileEmail"><strong>Email:</strong> dr.johnson@medixpro.com</p>
-                        <p id="profileRole"><strong>Role:</strong> Admin</p>
-                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
+                        <h5>Integration & Customization</h5>
+                        <p><strong>Third-Party Integrations:</strong> Lab Systems, Payment Gateways</p>
+                        <button class="btn btn-secondary" onclick="manageIntegrations()">Manage Integrations</button>
+                        <p><strong>Notifications:</strong> SMS/Email/WhatsApp Setup</p>
+                        <button class="btn btn-info" onclick="setupNotifications()">Configure</button>
                     </div>
                 </div>
             </div>
@@ -1144,6 +1484,103 @@
     </div>
 
     <!-- Modals -->
+    <!-- Onboard Organization Modal -->
+    <div class="modal fade" id="onboardOrgModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Onboard New Organization</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="onboardForm">
+                        <div class="mb-3">
+                            <label class="form-label">Organization Name</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Type</label>
+                            <select class="form-select">
+                                <option>Single Doctor</option>
+                                <option>Small Clinic (1-5 Doctors)</option>
+                                <option>Multi-Doctor Clinic (5-20)</option>
+                                <option>Hospital (20+)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Location (Karachi Area)</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Subscription Tier</label>
+                            <select class="form-select">
+                                <option>Basic</option>
+                                <option>Standard</option>
+                                <option>Enterprise</option>
+                            </select>
+                        </div>
+                        <!-- Modules selection -->
+                        <div class="mb-3">
+                            <label class="form-label">Enable Modules</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="patientMgmt">
+                                <label class="form-check-label" for="patientMgmt">Patient Management</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="telehealthMgmt">
+                                <label class="form-check-label" for="telehealthMgmt">Telehealth</label>
+                            </div>
+                            <!-- More checkboxes -->
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="onboardOrg()">Onboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Test Modal -->
+    <div class="modal fade" id="orderTestModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Order Laboratory Test</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="testForm">
+                        <div class="mb-3">
+                            <label class="form-label">Patient</label>
+                            <select class="form-select" required>
+                                <option>John Smith</option>
+                                <option>Emily Davis</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Test Type</label>
+                            <select class="form-select" required>
+                                <option>Blood Test</option>
+                                <option>Urine Analysis</option>
+                                <option>Imaging (X-Ray)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="orderTest()">Order Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Add Doctor Modal (Multi-step) -->
     <div class="modal fade" id="addDoctorModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -1265,7 +1702,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Department</label>
-                                <select class="form-control" required name="department">
+                                <select class="form-select" required name="department">
                                     <option>Internal Medicine</option>
                                     <option>Neuroscience</option>
                                     <option>Child Health</option>
@@ -1394,8 +1831,8 @@
                             <div class="mb-3">
                                 <label class="form-label">Assigned Doctor</label>
                                 <select class="form-select" required name="doctor">
-                                    <option>Dr. Johnson</option>
-                                    <option>Dr. Sarah</option>
+                                    <option>Dr. Ahmed</option>
+                                    <option>Dr. Khan</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -1456,8 +1893,8 @@
                         <div class="mb-3">
                             <label class="form-label">Doctor</label>
                             <select class="form-select" required name="doctor">
-                                <option>Dr. Johnson</option>
-                                <option>Dr. Sarah</option>
+                                <option>Dr. Ahmed</option>
+                                <option>Dr. Khan</option>
                             </select>
                         </div>
                         <div class="row">
@@ -1685,6 +2122,14 @@
                             </select>
                         </div>
                         <!-- Additional fields for amount, items, etc. -->
+                        <div class="mb-3">
+                            <label class="form-label">Amount (PKR)</label>
+                            <input type="number" class="form-control" required name="amount">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Services</label>
+                            <textarea class="form-control" name="services"></textarea>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -1712,8 +2157,8 @@
                         <div class="mb-3">
                             <label class="form-label">Head</label>
                             <select class="form-select" required name="head">
-                                <option>Dr. Johnson</option>
-                                <option>Dr. Sarah</option>
+                                <option>Dr. Ahmed</option>
+                                <option>Dr. Khan</option>
                             </select>
                         </div>
                     </form>
@@ -1811,14 +2256,17 @@
                 </div>
                 <div class="modal-body">
                     <form id="sessionForm">
-                        <!-- Similar to appointment form, with telehealth focus -->
                         <div class="mb-3">
                             <label class="form-label">Patient</label>
-                            <select class="form-select" name="patient"></select>
+                            <select class="form-select" name="patient">
+                                <option>John Smith</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Doctor</label>
-                            <select class="form-select" name="doctor"></select>
+                            <select class="form-select" name="doctor">
+                                <option>Dr. Ahmed</option>
+                            </select>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -1884,15 +2332,15 @@
                     <form id="editProfileForm">
                         <div class="mb-3">
                             <label class="form-label">Full Name</label>
-                            <input type="text" class="form-control" value="Dr. Johnson" name="name">
+                            <input type="text" class="form-control" value="Dr. Ahmed" name="name">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" value="dr.johnson@medixpro.com" name="email">
+                            <input type="email" class="form-control" value="dr.ahmed@medixpro.com" name="email">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Phone</label>
-                            <input type="tel" class="form-control" value="+1 (555) 123-4567" name="phone">
+                            <input type="tel" class="form-control" value="+92 300 1234567" name="phone">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Role</label>
@@ -1912,1809 +2360,1110 @@
         </div>
     </div>
 
-<script>
-    // Global variables
-let currentUserRole = 'admin';
-let currentStep = 1;
-let currentPatientStep = 1;
-let charts = {};
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let currentUserRole = 'super-admin'; // Default to super admin for demo
+        let currentStep = 1;
+        let currentPatientStep = 1;
+        let charts = {};
 
-// Mock data for demonstration
-const mockData = {
-    recentAppointments: [
-        { patient: 'John Smith', type: 'Check-up', time: 'Today 10:00 AM', status: 'Confirmed' },
-        { patient: 'Emily Davis', type: 'Consultation', time: 'Today 11:30 AM', status: 'In Progress' },
-        { patient: 'Robert Wilson', type: 'Follow-up', time: 'Today 09:15 AM', status: 'Completed' },
-        { patient: 'Alice Brown', type: 'Vaccination', time: 'Today 02:00 PM', status: 'Pending' },
-        { patient: 'Emma Thompson', type: 'Check-up', time: 'Today 09:00 AM', status: 'Confirmed' }
-    ],
-    todaySchedule: [
-        { patient: 'Emma Thompson', time: '09:00 AM', duration: '30 min', type: 'Check-up' },
-        { patient: 'Michael Chen', time: '10:15 AM', duration: '45 min', type: 'Follow-up' },
-        { patient: 'Sophia Rodriguez', time: '11:30 AM', duration: '60 min', type: 'Consultation' },
-        { patient: 'John Doe', time: '12:00 PM', duration: '30 min', type: 'Check-up' },
-        { patient: 'Jane Smith', time: '01:00 PM', duration: '45 min', type: 'Consultation' }
-    ],
-    upcomingAppointments: [
-        { patient: 'John Doe', datetime: '2025-09-13 09:00 AM', status: 'Confirmed', type: 'Follow-up' },
-        { patient: 'Jane Smith', datetime: '2025-09-13 10:30 AM', status: 'Pending', type: 'New Patient' },
-        { patient: 'Alice Brown', datetime: '2025-09-14 11:00 AM', status: 'Confirmed', type: 'Vaccination' },
-        { patient: 'Robert Wilson', datetime: '2025-09-15 02:00 PM', status: 'Pending', type: 'Follow-up' }
-    ],
-    medicationReminders: [
-        'Lisinopril - 10mg • Once daily - 8:00 AM',
-        'Metformin - 500mg • Twice daily - 2:00 PM',
-        'Aspirin - 81mg • Once daily - 9:00 PM'
-    ],
-    doctors: [
-        { id: 1, name: 'Dr. Johnson', specialty: 'Cardiology', status: 'Active', patients: 45, experience: '10 years', contact: 'johnson@medix.com', phone: '+1-555-0101' },
-        { id: 2, name: 'Dr. Sarah Williams', specialty: 'Neurology', status: 'Active', patients: 32, experience: '8 years', contact: 'sarah@medix.com', phone: '+1-555-0102' },
-        { id: 3, name: 'Dr. Michael Brown', specialty: 'Pediatrics', status: 'Active', patients: 28, experience: '12 years', contact: 'michael@medix.com', phone: '+1-555-0103' }
-    ],
-    patients: [
-        { id: 1, name: 'John Smith', ageGender: '35/M', status: 'Active', lastVisit: '2025-09-10', condition: 'Hypertension', doctor: 'Dr. Johnson', phone: '+1-555-1001' },
-        { id: 2, name: 'Emily Davis', ageGender: '28/F', status: 'Active', lastVisit: '2025-09-05', condition: 'Diabetes', doctor: 'Dr. Sarah Williams', phone: '+1-555-1002' },
-        { id: 3, name: 'Robert Wilson', ageGender: '42/M', status: 'Active', lastVisit: '2025-09-08', condition: 'Asthma', doctor: 'Dr. Michael Brown', phone: '+1-555-1003' }
-    ],
-    appointments: [
-        { id: 1, patient: 'John Smith', doctor: 'Dr. Johnson', date: '2025-09-10', time: '10:00', duration: '30 min', type: 'Check-up', status: 'Confirmed' },
-        { id: 2, patient: 'Emily Davis', doctor: 'Dr. Sarah Williams', date: '2025-09-11', time: '14:30', duration: '45 min', type: 'Consultation', status: 'Pending' }
-    ],
-    prescriptions: [
-        { id: 1, patient: 'John Smith', medication: 'Lisinopril', dosage: '10mg', frequency: 'Daily', start: '2025-09-01', end: '2025-12-01', status: 'Active' },
-        { id: 2, patient: 'Emily Davis', medication: 'Metformin', dosage: '500mg', frequency: 'Twice daily', start: '2025-08-15', end: '2025-11-15', status: 'Active' }
-    ],
-    ambulance: [
-        { id: 'AMB001', patient: 'John Smith', location: '123 Main St, City Center', status: 'Dispatched', time: '2025-09-10 10:00', priority: 'High' },
-        { id: 'AMB002', patient: 'Alice Brown', location: '456 Oak Ave, Downtown', status: 'En Route', time: '2025-09-10 11:15', priority: 'Medium' }
-    ],
-    pharmacy: [
-        { id: 1, medication: 'Aspirin', stock: 500, expiry: '2026-01-01', price: 5.99, supplier: 'MedSupply Inc' },
-        { id: 2, medication: 'Lisinopril', stock: 150, expiry: '2025-12-15', price: 12.50, supplier: 'PharmaCorp' },
-        { id: 3, medication: 'Metformin', stock: 200, expiry: '2026-03-10', price: 8.75, supplier: 'HealthMeds' }
-    ],
-    bloodBank: [
-        { id: 1, type: 'O+', quantity: 10, donor: 'Jane Doe', expiry: '2025-10-10', collected: '2025-09-10' },
-        { id: 2, type: 'A-', quantity: 5, donor: 'Mike Johnson', expiry: '2025-10-15', collected: '2025-09-15' },
-        { id: 3, type: 'AB+', quantity: 3, donor: 'Sarah Wilson', expiry: '2025-10-20', collected: '2025-09-20' }
-    ],
-    billing: [
-        { id: 'INV001', patient: 'John Smith', amount: 150.00, status: 'Paid', date: '2025-09-10', dueDate: '2025-10-10' },
-        { id: 'INV002', patient: 'Emily Davis', amount: 225.50, status: 'Pending', date: '2025-09-08', dueDate: '2025-10-08' },
-        { id: 'INV003', patient: 'Robert Wilson', amount: 75.00, status: 'Overdue', date: '2025-08-15', dueDate: '2025-09-15' }
-    ],
-    departments: [
-        { id: 1, department: 'Cardiology', head: 'Dr. Johnson', staff: 15, status: 'Active', budget: 250000 },
-        { id: 2, department: 'Neurology', head: 'Dr. Sarah Williams', staff: 12, status: 'Active', budget: 200000 },
-        { id: 3, department: 'Pediatrics', head: 'Dr. Michael Brown', staff: 18, status: 'Active', budget: 180000 }
-    ],
-    inventory: [
-        { id: 1, item: 'Syringes', quantity: 1000, supplier: 'MedSupply', expiry: '2026-06-01', reorderLevel: 100 },
-        { id: 2, item: 'Surgical Gloves', quantity: 5000, supplier: 'SafeMed', expiry: '2027-01-01', reorderLevel: 500 },
-        { id: 3, item: 'Bandages', quantity: 800, supplier: 'HealthCare Plus', expiry: '2026-12-01', reorderLevel: 200 }
-    ],
-    staff: [
-        { id: 1, name: 'Alice Brown', role: 'Nurse', department: 'Cardiology', status: 'Active', contact: 'alice@medix.com', phone: '+1-555-2001' },
-        { id: 2, name: 'David Wilson', role: 'Lab Technician', department: 'Laboratory', status: 'Active', contact: 'david@medix.com', phone: '+1-555-2002' },
-        { id: 3, name: 'Lisa Garcia', role: 'Receptionist', department: 'Administration', status: 'Active', contact: 'lisa@medix.com', phone: '+1-555-2003' }
-    ],
-    documents: [
-        { id: 1, name: 'Patient Record 001.pdf', date: '2025-09-10', type: 'Medical Record', size: '2.5 MB' },
-        { id: 2, name: 'Lab Results - Blood Work.pdf', date: '2025-09-09', type: 'Lab Report', size: '1.8 MB' },
-        { id: 3, name: 'X-Ray Results.pdf', date: '2025-09-08', type: 'Imaging', size: '4.2 MB' }
-    ],
-    reports: [
-        { id: 1, report: 'Monthly Revenue - Aug 2025', date: '2025-09-01', status: 'Generated', type: 'Financial' },
-        { id: 2, report: 'Patient Demographics - Sep 2025', date: '2025-09-05', status: 'Generated', type: 'Demographics' },
-        { id: 3, report: 'Appointment Statistics - Sep 2025', date: '2025-09-07', status: 'Pending', type: 'Analytics' },
-        { id: 4, report: 'Inventory Status Report', date: '2025-09-09', status: 'Generated', type: 'Inventory' }
-    ],
-    notifications: [
-        { id: 1, message: 'New Appointment: John Smith scheduled for 10:00 AM', time: '2 hours ago', read: false, priority: 'normal' },
-        { id: 2, message: 'Low Inventory: Syringes stock below 100 units', time: '5 hours ago', read: false, priority: 'high' },
-        { id: 3, message: 'Payment Received: Emily Davis paid $150', time: '1 day ago', read: true, priority: 'normal' },
-        { id: 4, message: 'System Update: New version available', time: '3 days ago', read: true, priority: 'low' }
-    ]
-};
+        // Mock data for demonstration (updated for Pakistan context and 2025 dates)
+        const mockData = {
+            organizations: [
+                { id: 1, name: 'Karachi General Hospital', type: 'Hospital', tier: 'Enterprise', doctors: 50, revenue: 'PKR 5,000,000', status: 'Active' },
+                { id: 2, name: 'Dr. Ahmed Clinic', type: 'Small Clinic', tier: 'Basic', doctors: 3, revenue: 'PKR 150,000', status: 'Trial' },
+                { id: 3, name: 'Sindh Medical Center', type: 'Multi-Doctor Clinic', tier: 'Standard', doctors: 12, revenue: 'PKR 800,000', status: 'Active' }
+            ],
+            laboratory: [
+                { id: 1, patient: 'John Smith', testType: 'Blood Test', orderedBy: 'Dr. Ahmed', dateOrdered: '2025-09-10', status: 'Pending', results: 'N/A' },
+                { id: 2, patient: 'Emily Davis', testType: 'Urine Analysis', orderedBy: 'Dr. Khan', dateOrdered: '2025-09-09', status: 'Completed', results: 'View' }
+            ],
+            recentAppointments: [
+                { patient: 'John Smith', type: 'Check-up', time: 'Today 10:00 AM', status: 'Confirmed' },
+                { patient: 'Emily Davis', type: 'Consultation', time: 'Today 11:30 AM', status: 'In Progress' },
+                { patient: 'Robert Wilson', type: 'Follow-up', time: 'Today 09:15 AM', status: 'Completed' },
+                { patient: 'Alice Brown', type: 'Vaccination', time: 'Today 02:00 PM', status: 'Pending' },
+                { patient: 'Emma Thompson', type: 'Check-up', time: 'Today 09:00 AM', status: 'Confirmed' }
+            ],
+            todaySchedule: [
+                { patient: 'Emma Thompson', time: '09:00 AM', duration: '30 min', type: 'Check-up' },
+                { patient: 'Michael Chen', time: '10:15 AM', duration: '45 min', type: 'Follow-up' },
+                { patient: 'Sophia Rodriguez', time: '11:30 AM', duration: '60 min', type: 'Consultation' },
+                { patient: 'John Doe', time: '12:00 PM', duration: '30 min', type: 'Check-up' },
+                { patient: 'Jane Smith', time: '01:00 PM', duration: '45 min', type: 'Consultation' }
+            ],
+            upcomingAppointments: [
+                { patient: 'John Doe', datetime: '2025-09-13 09:00 AM', status: 'Confirmed', type: 'Follow-up' },
+                { patient: 'Jane Smith', datetime: '2025-09-13 10:30 AM', status: 'Pending', type: 'New Patient' },
+                { patient: 'Alice Brown', datetime: '2025-09-14 11:00 AM', status: 'Confirmed', type: 'Vaccination' },
+                { patient: 'Robert Wilson', datetime: '2025-09-15 02:00 PM', status: 'Pending', type: 'Follow-up' }
+            ],
+            medicationReminders: [
+                'Lisinopril - 10mg • Once daily - 8:00 AM',
+                'Metformin - 500mg • Twice daily - 2:00 PM',
+                'Aspirin - 81mg • Once daily - 9:00 PM'
+            ],
+            doctors: [
+                { id: 1, name: 'Dr. Ahmed Khan', specialty: 'Cardiology', department: 'Cardiology', status: 'Active', patients: 45 },
+                { id: 2, name: 'Dr. Sarah Williams', specialty: 'Neurology', department: 'Neurology', status: 'Active', patients: 32 },
+                { id: 3, name: 'Dr. Michael Brown', specialty: 'Pediatrics', department: 'Pediatrics', status: 'Active', patients: 28 }
+            ],
+            patients: [
+                { id: 1, name: 'John Smith', demographics: '35/M', history: 'Hypertension', lastVisit: '2025-09-10', doctor: 'Dr. Ahmed Khan', phone: '+92 300 1234567' },
+                { id: 2, name: 'Emily Davis', demographics: '28/F', history: 'Diabetes', lastVisit: '2025-09-05', doctor: 'Dr. Sarah Williams', phone: '+92 321 2345678' },
+                { id: 3, name: 'Robert Wilson', demographics: '42/M', history: 'Asthma', lastVisit: '2025-09-08', doctor: 'Dr. Michael Brown', phone: '+92 333 3456789' }
+            ],
+            appointments: [
+                { id: 1, patient: 'John Smith', doctor: 'Dr. Ahmed Khan', dateTime: '2025-09-10 10:00', duration: '30 min', type: 'Check-up (In-Person)', status: 'Confirmed (Reminder Sent)' },
+                { id: 2, patient: 'Emily Davis', doctor: 'Dr. Sarah Williams', dateTime: '2025-09-11 14:30', duration: '45 min', type: 'Consultation (Telehealth)', status: 'Pending' }
+            ],
+            prescriptions: [
+                { id: 1, patient: 'John Smith', medication: 'Lisinopril', dosageFreq: '10mg Daily', duration: '3 months', pharmacyStatus: 'Dispensed', actions: 'Print/Share' },
+                { id: 2, patient: 'Emily Davis', medication: 'Metformin', dosageFreq: '500mg Twice daily', duration: '6 months', pharmacyStatus: 'Pending', actions: 'Print/Share' }
+            ],
+            ambulance: [
+                { id: 'AMB001', patient: 'John Smith', location: 'Clifton, Karachi', status: 'En Route', eta: '15 min', actions: 'Track' },
+                { id: 'AMB002', patient: 'Alice Brown', location: 'Gulshan-e-Iqbal, Karachi', status: 'Arrived', eta: 'N/A', actions: 'Track' }
+            ],
+            bloodBank: [
+                { id: 1, type: 'O+', units: 10, donor: 'Ahmed Ali', expiry: '2025-10-10', status: 'Available', actions: 'Use' },
+                { id: 2, type: 'A-', units: 5, donor: 'Sara Khan', expiry: '2025-10-15', status: 'Requested', actions: 'Use' }
+            ],
+            billing: [
+                { id: 'INV001', patient: 'John Smith', amount: 15000, insurance: 'Pending', date: '2025-09-10', actions: 'Process/Pay' },
+                { id: 'INV002', patient: 'Emily Davis', amount: 22550, insurance: 'Approved', date: '2025-09-08', actions: 'Process/Pay' }
+            ],
+            departments: [
+                { id: 1, name: 'Cardiology', head: 'Dr. Ahmed Khan', staff: 15, allocation: 'High', status: 'Active', actions: 'Edit' },
+                { id: 2, name: 'Neurology', head: 'Dr. Sarah Williams', staff: 12, allocation: 'Medium', status: 'Active', actions: 'Edit' }
+            ],
+            inventory: [
+                { id: 1, item: 'Syringes', quantity: 1000, supplier: 'MedSupply Pakistan', expiry: '2026-06-01', alert: 'No', actions: 'Edit' },
+                { id: 2, item: 'Surgical Gloves', quantity: 500, supplier: 'SafeMed', expiry: '2027-01-01', alert: 'Low', actions: 'Edit' }
+            ],
+            staff: [
+                { id: 1, name: 'Alice Brown', role: 'Nurse', department: 'Cardiology', schedule: 'Full-time', status: 'Active', actions: 'Edit' },
+                { id: 2, name: 'David Wilson', role: 'Lab Technician', department: 'Laboratory', schedule: 'Part-time', status: 'Active', actions: 'Edit' }
+            ],
+            documents: [
+                { id: 1, name: 'Patient Record 001.pdf', patient: 'John Smith', type: 'Medical Record', date: '2025-09-10', access: 'Doctor Only', actions: 'View/Share' },
+                { id: 2, name: 'Lab Results - Blood Work.pdf', patient: 'Emily Davis', type: 'Lab Report', date: '2025-09-09', access: 'Patient & Doctor', actions: 'View/Share' }
+            ],
+            reports: [
+                { id: 1, report: 'Monthly Revenue - Aug 2025', date: '2025-09-01', status: 'Generated', actions: 'Download' },
+                { id: 2, report: 'Patient Demographics - Sep 2025', date: '2025-09-05', status: 'Generated', actions: 'Download' }
+            ],
+            notifications: [
+                { id: 1, message: 'New Appointment: John Smith scheduled for 10:00 AM', time: '2 hours ago', read: false },
+                { id: 2, message: 'Low Inventory: Syringes stock below 100 units', time: '5 hours ago', read: false },
+                { id: 3, message: 'Payment Received: Emily Davis paid PKR 15,000', time: '1 day ago', read: true }
+            ],
+            staffTasks: [
+                { task: 'Patient Registration', priority: 'High', status: 'Pending', actions: 'Complete' },
+                { task: 'Billing Processing', priority: 'Medium', status: 'In Progress', actions: 'Complete' }
+            ],
+            careTips: [
+                'Heart Health: Aim for 30 minutes of exercise daily.',
+                'Stress Management: Practice mindfulness for 10 minutes.',
+                'Nutrition: Eat more fruits and vegetables.'
+            ],
+            activityTable: [
+                { date: '2025-09-10', steps: 8500, calories: 450, progress: '85%' },
+                { date: '2025-09-09', steps: 7200, calories: 380, progress: '72%' }
+            ],
+            integrationsList: [
+                'Lab System - Connected',
+                'Payment Gateway - Active',
+                'Pharmacy API - Integrated'
+            ],
+            revenueTable: [
+                { org: 'Karachi General', revenue: 'PKR 5M', status: 'Active' },
+                { org: 'Dr. Ahmed Clinic', revenue: 'PKR 150K', status: 'Trial' }
+            ]
+        };
 
-// Initialize application
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('MedixPro System Initializing...');
-    initializeUserRole();
-    setupEventListeners();
-    populateAllDashboards();
-    initializeCharts();
-    setupRealTimeFeatures();
-    console.log('MedixPro System Ready');
-});
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('MedixPro System Initializing...');
+            initializeUserRole();
+            setupEventListeners();
+            populateAllSections();
+            initializeCharts();
+            setupRealTimeFeatures();
+            console.log('MedixPro System Ready');
+        });
 
-// User Role and Access Control
-function initializeUserRole() {
-    const welcomeMessage = document.getElementById('welcomeMessage');
-    if (welcomeMessage) {
-        welcomeMessage.textContent = `Welcome back, ${currentUserRole.charAt(0).toUpperCase() + currentUserRole.slice(1)}!`;
-    }
-    hideRoleRestrictedSections();
-}
-
-function hideRoleRestrictedSections() {
-    const navItems = document.querySelectorAll('.nav-item');
-    
-    if (currentUserRole === 'patient') {
-        const allowedSections = ['patient-dashboard'];
-        navItems.forEach(item => {
-            if (!allowedSections.includes(item.dataset.section)) {
-                item.style.display = 'none';
+        // User Role and Access Control
+        function initializeUserRole() {
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            if (welcomeMessage) {
+                welcomeMessage.textContent = `Welcome back, ${currentUserRole.replace('-', ' ').toUpperCase()}!`;
             }
-        });
-    } else if (currentUserRole === 'doctor') {
-        const restrictedSections = ['admin-dashboard', 'billing', 'departments', 'staff'];
-        navItems.forEach(item => {
-            if (restrictedSections.includes(item.dataset.section)) {
-                item.style.display = 'none';
-            }
-        });
-    }
-    
-    const defaultSection = currentUserRole === 'admin' ? 'admin-dashboard' : 
-                          currentUserRole === 'doctor' ? 'doctor-dashboard' : 'patient-dashboard';
-    showSection(defaultSection);
-}
-
-// Event Listeners Setup
-function setupEventListeners() {
-    // Navigation
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            showSection(e.currentTarget.dataset.section);
-        });
-    });
-
-    // Search functionality
-    const globalSearch = document.getElementById('globalSearch');
-    if (globalSearch) {
-        globalSearch.addEventListener('input', debounce(handleGlobalSearch, 300));
-    }
-
-    // Mobile sidebar toggle
-    const toggleSidebar = document.getElementById('toggleSidebar');
-    if (toggleSidebar) {
-        toggleSidebar.addEventListener('click', handleToggleSidebar);
-    }
-
-    // Notification handling
-    const notificationBell = document.getElementById('notificationBell');
-    if (notificationBell) {
-        notificationBell.addEventListener('click', toggleNotifications);
-    }
-    document.addEventListener('click', handleOutsideClick);
-
-    // Multi-step modals
-    setupDoctorModal();
-    setupPatientModal();
-
-    // Form submissions
-    setupFormHandlers();
-
-    // Filter buttons
-    setupFilterHandlers();
-
-    // Window resize handler
-    window.addEventListener('resize', handleWindowResize);
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', handleKeyboardShortcuts);
-}
-
-// Navigation and Section Management
-function showSection(sectionId) {
-    document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.add('hidden');
-    });
-    
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) {
-        targetSection.classList.remove('hidden');
-        
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        const activeNav = document.querySelector(`[data-section="${sectionId}"]`);
-        if (activeNav) {
-            activeNav.classList.add('active');
+            hideRoleRestrictedSections();
         }
-        
-        loadSectionData(sectionId);
-    }
-}
 
-function loadSectionData(sectionId) {
-    switch (sectionId) {
-        case 'admin-dashboard':
-            populateAdminDashboard();
-            break;
-        case 'doctor-dashboard':
-            populateDoctorDashboard();
-            break;
-        case 'patient-dashboard':
-            populatePatientDashboard();
-            break;
-        case 'doctors':
-            populateDoctorsTable();
-            break;
-        case 'patients':
-            populatePatientsTable();
-            break;
-        case 'appointments':
-            populateAppointmentsTable();
-            break;
-        case 'prescriptions':
-            populatePrescriptionsTable();
-            break;
-        case 'ambulance':
-            populateAmbulanceTable();
-            break;
-        case 'pharmacy':
-            populatePharmacyTable();
-            break;
-        case 'blood-bank':
-            populateBloodBankTable();
-            break;
-        case 'billing':
-            populateBillingTable();
-            break;
-        case 'departments':
-            populateDepartmentsTable();
-            break;
-        case 'inventory':
-            populateInventoryTable();
-            break;
-        case 'staff':
-            populateStaffTable();
-            break;
-        case 'documents':
-            populateDocumentsTable();
-            break;
-        case 'reports':
-            populateReportsTable();
-            break;
-    }
-}
-
-// Dashboard Population Functions
-function populateAllDashboards() {
-    populateAdminDashboard();
-    populateDoctorDashboard();
-    populatePatientDashboard();
-    populateNotifications();
-}
-
-function populateAdminDashboard() {
-    const tbody = document.getElementById('recentAppointments');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.recentAppointments.forEach(apt => {
-        const row = tbody.insertRow();
-        const statusClass = getStatusClass(apt.status);
-        row.innerHTML = `
-            <td>${apt.patient}</td>
-            <td>${apt.type}</td>
-            <td>${apt.time}</td>
-            <td><span class="badge bg-${statusClass}">${apt.status}</span></td>
-        `;
-    });
-    
-    const reportsTable = document.getElementById('reportsTable');
-    if (reportsTable) {
-        reportsTable.innerHTML = mockData.reports.map(report => `
-            <tr>
-                <td>${report.report}</td>
-                <td>${report.date}</td>
-                <td><span class="badge bg-${report.status === 'Generated' ? 'success' : 'warning'}">${report.status}</span></td>
-                <td>
-                    ${report.status === 'Generated' ? 
-                        `<button class="btn btn-sm btn-primary" onclick="downloadReport(${report.id})">Download</button>` : 
-                        `<button class="btn btn-sm btn-secondary" onclick="viewReportStatus(${report.id})">View Status</button>`
+        function hideRoleRestrictedSections() {
+            const navItems = document.querySelectorAll('.nav-item');
+            // Simplified role-based hiding - super-admin sees all, others limited
+            if (currentUserRole !== 'super-admin') {
+                const restricted = ['super-admin-dashboard', 'organizations'];
+                navItems.forEach(item => {
+                    if (restricted.includes(item.dataset.section)) {
+                        item.style.display = 'none';
                     }
-                </td>
-            </tr>
-        `).join('');
-    }
-}
-
-function populateDoctorDashboard() {
-    const todaySchedule = document.getElementById('todaySchedule');
-    if (todaySchedule) {
-        todaySchedule.innerHTML = '';
-        mockData.todaySchedule.forEach(schedule => {
-            const row = todaySchedule.insertRow();
-            row.innerHTML = `
-                <td>${schedule.patient}</td>
-                <td>${schedule.time}</td>
-                <td>${schedule.duration}</td>
-                <td>${schedule.type}</td>
-            `;
-        });
-    }
-    
-    const upcomingAppointments = document.getElementById('upcomingAppointments');
-    if (upcomingAppointments) {
-        upcomingAppointments.innerHTML = '';
-        mockData.upcomingAppointments.forEach(apt => {
-            const row = upcomingAppointments.insertRow();
-            const statusClass = getStatusClass(apt.status);
-            row.innerHTML = `
-                <td>${apt.patient}</td>
-                <td>${apt.datetime}</td>
-                <td><span class="badge bg-${statusClass}">${apt.status}</span></td>
-                <td>${apt.type}</td>
-            `;
-        });
-    }
-}
-
-function populatePatientDashboard() {
-    const medicationReminders = document.getElementById('medicationReminders');
-    if (medicationReminders) {
-        medicationReminders.innerHTML = '';
-        mockData.medicationReminders.forEach(reminder => {
-            const li = document.createElement('li');
-            li.className = 'list-item mb-2 p-2 border rounded';
-            li.innerHTML = `
-                <div class="d-flex justify-content-between align-items-center">
-                    <span>${reminder}</span>
-                    <button class="btn btn-sm btn-outline-primary" onclick="markMedicationTaken(this)">Mark Taken</button>
-                </div>
-            `;
-            medicationReminders.appendChild(li);
-        });
-    }
-}
-
-// Table Population Functions
-function populateDoctorsTable() {
-    const tbody = document.getElementById('doctorsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.doctors.forEach(doctor => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${doctor.name}</td>
-            <td>${doctor.specialty}</td>
-            <td><span class="badge bg-${doctor.status === 'Active' ? 'success' : 'secondary'}">${doctor.status}</span></td>
-            <td>${doctor.patients}</td>
-            <td>${doctor.experience}</td>
-            <td>
-                <div>${doctor.contact}</div>
-                <small class="text-muted">${doctor.phone}</small>
-            </td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editDoctor(${doctor.id})">Edit</button>
-                <button class="btn btn-sm btn-info me-1" onclick="viewDoctorSchedule(${doctor.id})">Schedule</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteDoctor(${doctor.id})">Delete</button>
-            </td>
-        `;
-    });
-}
-
-function populatePatientsTable() {
-    const tbody = document.getElementById('patientsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.patients.forEach(patient => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${patient.name}</td>
-            <td>${patient.ageGender}</td>
-            <td><span class="badge bg-${patient.status === 'Active' ? 'success' : 'secondary'}">${patient.status}</span></td>
-            <td>${patient.lastVisit}</td>
-            <td>${patient.condition}</td>
-            <td>${patient.doctor}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editPatient(${patient.id})">Edit</button>
-                <button class="btn btn-sm btn-info me-1" onclick="viewPatientHistory(${patient.id})">History</button>
-                <button class="btn btn-sm btn-danger" onclick="deletePatient(${patient.id})">Delete</button>
-            </td>
-        `;
-    });
-}
-
-function populateAppointmentsTable() {
-    const tbody = document.getElementById('appointmentsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.appointments.forEach(apt => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${apt.patient}</td>
-            <td>${apt.doctor}</td>
-            <td>${apt.date}</td>
-            <td>${apt.time}</td>
-            <td>${apt.duration}</td>
-            <td>${apt.type}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editAppointment(${apt.id})">Edit</button>
-                <button class="btn btn-sm btn-success me-1" onclick="confirmAppointment(${apt.id})">Confirm</button>
-                <button class="btn btn-sm btn-danger" onclick="cancelAppointment(${apt.id})">Cancel</button>
-            </td>
-        `;
-    });
-}
-
-function populatePrescriptionsTable() {
-    const tbody = document.getElementById('prescriptionsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.prescriptions.forEach(prescription => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${prescription.patient}</td>
-            <td>${prescription.medication}</td>
-            <td>${prescription.dosage}</td>
-            <td>${prescription.frequency}</td>
-            <td>${prescription.start}</td>
-            <td>${prescription.end}</td>
-            <td><span class="badge bg-success">${prescription.status}</span></td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editPrescription(${prescription.id})">Edit</button>
-                <button class="btn btn-sm btn-info me-1" onclick="renewPrescription(${prescription.id})">Renew</button>
-                <button class="btn btn-sm btn-secondary" onclick="printPrescription(${prescription.id})">Print</button>
-            </td>
-        `;
-    });
-}
-
-function populateAmbulanceTable() {
-    const tbody = document.getElementById('ambulanceTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.ambulance.forEach(request => {
-        const row = tbody.insertRow();
-        const statusClass = request.status === 'Dispatched' ? 'warning' : 
-                          request.status === 'En Route' ? 'info' : 'secondary';
-        row.innerHTML = `
-            <td>${request.id}</td>
-            <td>${request.patient}</td>
-            <td>${request.location}</td>
-            <td><span class="badge bg-${statusClass}">${request.status}</span></td>
-            <td>${request.time}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="trackAmbulance('${request.id}')">Track</button>
-                <button class="btn btn-sm btn-info me-1" onclick="updateAmbulanceStatus('${request.id}')">Update</button>
-                <button class="btn btn-sm btn-danger" onclick="cancelAmbulanceRequest('${request.id}')">Cancel</button>
-            </td>
-        `;
-    });
-}
-
-function populatePharmacyTable() {
-    const tbody = document.getElementById('pharmacyTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.pharmacy.forEach(item => {
-        const row = tbody.insertRow();
-        const lowStock = item.stock < 100;
-        row.innerHTML = `
-            <td>${item.medication}</td>
-            <td ${lowStock ? 'class="text-danger fw-bold"' : ''}>${item.stock}</td>
-            <td>${item.expiry}</td>
-            <td>$${item.price.toFixed(2)}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editPharmacyItem(${item.id})">Edit</button>
-                <button class="btn btn-sm btn-success me-1" onclick="restockItem(${item.id})">Restock</button>
-                ${lowStock ? '<span class="badge bg-danger">Low Stock</span>' : ''}
-            </td>
-        `;
-    });
-}
-
-function populateBloodBankTable() {
-    const tbody = document.getElementById('bloodBankTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.bloodBank.forEach(entry => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${entry.type}</td>
-            <td>${entry.quantity} units</td>
-            <td>${entry.donor}</td>
-            <td>${entry.expiry}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editBloodEntry(${entry.id})">Edit</button>
-                <button class="btn btn-sm btn-success me-1" onclick="useBlood(${entry.id})">Use</button>
-                <button class="btn btn-sm btn-info" onclick="viewBloodDetails(${entry.id})">Details</button>
-            </td>
-        `;
-    });
-}
-
-function populateBillingTable() {
-    const tbody = document.getElementById('billingTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.billing.forEach(invoice => {
-        const row = tbody.insertRow();
-        const statusClass = invoice.status === 'Paid' ? 'success' : 
-                          invoice.status === 'Pending' ? 'warning' : 'danger';
-        row.innerHTML = `
-            <td>${invoice.id}</td>
-            <td>${invoice.patient}</td>
-            <td>$${invoice.amount.toFixed(2)}</td>
-            <td><span class="badge bg-${statusClass}">${invoice.status}</span></td>
-            <td>${invoice.date}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="viewInvoice('${invoice.id}')">View</button>
-                <button class="btn btn-sm btn-info me-1" onclick="printInvoice('${invoice.id}')">Print</button>
-                ${invoice.status === 'Pending' ? `<button class="btn btn-sm btn-success" onclick="markPaid('${invoice.id}')">Mark Paid</button>` : ''}
-            </td>
-        `;
-    });
-}
-
-function populateDepartmentsTable() {
-    const tbody = document.getElementById('departmentsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.departments.forEach(dept => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${dept.department}</td>
-            <td>${dept.head}</td>
-            <td>${dept.staff}</td>
-            <td><span class="badge bg-success">${dept.status}</span></td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editDepartment(${dept.id})">Edit</button>
-                <button class="btn btn-sm btn-info me-1" onclick="manageDepartmentStaff(${dept.id})">Staff</button>
-                <button class="btn btn-sm btn-secondary" onclick="manageBudget(${dept.id})">Budget</button>
-            </td>
-        `;
-    });
-}
-
-function populateInventoryTable() {
-    const tbody = document.getElementById('inventoryTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.inventory.forEach(item => {
-        const row = tbody.insertRow();
-        const lowStock = item.quantity <= item.reorderLevel;
-        row.innerHTML = `
-            <td>${item.item}</td>
-            <td ${lowStock ? 'class="text-danger fw-bold"' : ''}>${item.quantity}</td>
-            <td>${item.supplier}</td>
-            <td>${item.expiry || 'N/A'}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editInventoryItem(${item.id})">Edit</button>
-                <button class="btn btn-sm btn-warning me-1" onclick="orderItem(${item.id})">Order</button>
-                ${lowStock ? '<span class="badge bg-danger">Reorder</span>' : ''}
-            </td>
-        `;
-    });
-}
-
-function populateStaffTable() {
-    const tbody = document.getElementById('staffTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.staff.forEach(staff => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${staff.name}</td>
-            <td>${staff.role}</td>
-            <td>${staff.department}</td>
-            <td><span class="badge bg-${staff.status === 'Active' ? 'success' : 'secondary'}">${staff.status}</span></td>
-            <td>
-                <div>${staff.contact}</div>
-                <small class="text-muted">${staff.phone}</small>
-            </td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editStaff(${staff.id})">Edit</button>
-                <button class="btn btn-sm btn-info me-1" onclick="viewStaffSchedule(${staff.id})">Schedule</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteStaff(${staff.id})">Delete</button>
-            </td>
-        `;
-    });
-}
-
-function populateDocumentsTable() {
-    const tbody = document.getElementById('documentsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    mockData.documents.forEach(doc => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>
-                <div>${doc.name}</div>
-                <small class="text-muted">${doc.type} - ${doc.size}</small>
-            </td>
-            <td>${doc.date}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="viewDocument(${doc.id})">View</button>
-                <button class="btn btn-sm btn-info me-1" onclick="downloadDocument(${doc.id})">Download</button>
-                <button class="btn btn-sm btn-secondary" onclick="shareDocument(${doc.id})">Share</button>
-            </td>
-        `;
-    });
-}
-
-function populateReportsTable() {
-    const tbody = document.getElementById('reportsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = mockData.reports.map(report => `
-        <tr>
-            <td>${report.report}</td>
-            <td>${report.date}</td>
-            <td><span class="badge bg-${report.status === 'Generated' ? 'success' : 'warning'}">${report.status}</span></td>
-            <td>
-                ${report.status === 'Generated' ? 
-                    `<button class="btn btn-sm btn-primary" onclick="downloadReport(${report.id})">Download</button>` : 
-                    `<button class="btn btn-sm btn-secondary">Processing...</button>`
-                }
-            </td>
-        </tr>
-    `).join('');
-}
-
-function populateNotifications() {
-    const dropdown = document.getElementById('notificationsDropdown');
-    const count = document.getElementById('notificationCount');
-    
-    if (dropdown) {
-        dropdown.innerHTML = '';
-        mockData.notifications.forEach(notif => {
-            const div = document.createElement('div');
-            div.className = 'notification-item';
-            div.innerHTML = `
-                <strong>${notif.message}</strong><br>
-                <small>${notif.time}</small>
-                ${!notif.read ? `<button class="btn btn-xs btn-outline-primary ms-1" onclick="markNotificationRead(${notif.id})">Mark Read</button>` : ''}
-            `;
-            dropdown.appendChild(div);
-        });
-    }
-    
-    if (count) {
-        const unreadCount = mockData.notifications.filter(n => !n.read).length;
-        count.textContent = unreadCount;
-        count.style.display = unreadCount > 0 ? 'inline' : 'none';
-    }
-}
-
-// Utility Functions
-function getStatusClass(status) {
-    switch (status.toLowerCase()) {
-        case 'confirmed':
-        case 'active':
-        case 'paid':
-            return 'success';
-        case 'pending':
-            return 'warning';
-        case 'in progress':
-            return 'info';
-        case 'completed':
-            return 'primary';
-        case 'overdue':
-        case 'cancelled':
-            return 'danger';
-        default:
-            return 'secondary';
-    }
-}
-
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-function showAlert(message, type) {
-    const alertContainer = document.createElement('div');
-    alertContainer.className = `alert alert-${type} alert-dismissible fade show`;
-    alertContainer.style.position = 'fixed';
-    alertContainer.style.top = '20px';
-    alertContainer.style.right = '20px';
-    alertContainer.style.zIndex = '1050';
-    alertContainer.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    document.body.appendChild(alertContainer);
-    setTimeout(() => {
-        alertContainer.classList.remove('show');
-        setTimeout(() => alertContainer.remove(), 150);
-    }, 3000);
-}
-
-// Search Functionality
-function handleGlobalSearch(e) {
-    const query = e.target.value.toLowerCase().trim();
-    
-    if (query.length < 2) {
-        clearSearchHighlights();
-        return;
-    }
-    
-    const tables = document.querySelectorAll('.content-section table tbody');
-    tables.forEach(tbody => {
-        const rows = tbody.querySelectorAll('tr');
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            if (text.includes(query)) {
-                row.style.display = '';
-                highlightSearchTerm(row, query);
-            } else {
-                row.style.display = 'none';
+                });
             }
-        });
-    });
-}
-
-function clearSearchHighlights() {
-    const highlights = document.querySelectorAll('.search-highlight');
-    highlights.forEach(highlight => {
-        const parent = highlight.parentNode;
-        parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
-        parent.normalize();
-    });
-    
-    document.querySelectorAll('tr').forEach(row => {
-        row.style.display = '';
-    });
-}
-
-function highlightSearchTerm(element, term) {
-    const regex = new RegExp(`(${term})`, 'gi');
-    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
-    
-    let node;
-    const nodesToReplace = [];
-    while (node = walker.nextNode()) {
-        if (regex.test(node.textContent)) {
-            nodesToReplace.push(node);
+            showSection('super-admin-dashboard');
         }
-    }
-    
-    nodesToReplace.forEach(node => {
-        const fragment = document.createDocumentFragment();
-        const parts = node.textContent.split(regex);
-        const matches = node.textContent.match(regex) || [];
-        
-        parts.forEach((part, index) => {
-            if (index % 2 === 0) {
-                fragment.appendChild(document.createTextNode(part));
-            } else {
-                const span = document.createElement('span');
-                span.className = 'search-highlight';
-                span.style.backgroundColor = 'yellow';
-                span.textContent = part;
-                fragment.appendChild(span);
+
+        // Event Listeners Setup
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showSection(e.currentTarget.dataset.section);
+                });
+            });
+
+            // Search functionality
+            const globalSearch = document.getElementById('globalSearch');
+            if (globalSearch) {
+                globalSearch.addEventListener('input', debounce(handleGlobalSearch, 300));
             }
-        });
-        
-        node.parentNode.replaceChild(fragment, node);
-    });
-}
 
-// Mobile Sidebar Toggle
-function handleToggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-    sidebar.classList.toggle('show');
-    mainContent.classList.toggle('expanded');
-}
-
-// Notification Handling
-function toggleNotifications(e) {
-    e.stopPropagation();
-    const dropdown = document.getElementById('notificationsDropdown');
-    if (dropdown) {
-        dropdown.classList.toggle('show');
-    }
-}
-
-function handleOutsideClick(e) {
-    const dropdown = document.getElementById('notificationsDropdown');
-    const bell = document.getElementById('notificationBell');
-    if (dropdown && !dropdown.contains(e.target) && !bell.contains(e.target)) {
-        dropdown.classList.remove('show');
-    }
-}
-
-// Filter Functions
-function setupFilterHandlers() {
-    const doctorSearch = document.getElementById('doctorSearch');
-    const doctorStatus = document.getElementById('doctorStatus');
-    const patientSearch = document.getElementById('patientSearch');
-    const patientStatus = document.getElementById('patientStatus');
-    const appointmentSearch = document.getElementById('appointmentSearch');
-    const prescriptionSearch = document.getElementById('prescriptionSearch');
-
-    if (doctorSearch) doctorSearch.addEventListener('input', debounce(filterDoctors, 300));
-    if (doctorStatus) doctorStatus.addEventListener('change', filterDoctors);
-    if (patientSearch) patientSearch.addEventListener('input', debounce(filterPatients, 300));
-    if (patientStatus) patientStatus.addEventListener('change', filterPatients);
-    if (appointmentSearch) appointmentSearch.addEventListener('input', debounce(filterAppointments, 300));
-    if (prescriptionSearch) prescriptionSearch.addEventListener('input', debounce(filterPrescriptions, 300));
-}
-
-function filterDoctors() {
-    const search = document.getElementById('doctorSearch')?.value.toLowerCase() || '';
-    const status = document.getElementById('doctorStatus')?.value || 'All';
-    
-    let filteredDoctors = mockData.doctors.filter(doc => {
-        let matches = true;
-        if (search) {
-            matches = matches && (doc.name.toLowerCase().includes(search) || doc.specialty.toLowerCase().includes(search));
-        }
-        if (status !== 'All') {
-            matches = matches && (doc.status === status);
-        }
-        return matches;
-    });
-    
-    updateDoctorsTable(filteredDoctors);
-}
-
-function filterPatients() {
-    const search = document.getElementById('patientSearch')?.value.toLowerCase() || '';
-    const status = document.getElementById('patientStatus')?.value || 'All';
-    const dateFrom = document.getElementById('patientDateFrom')?.value || '';
-    const dateTo = document.getElementById('patientDateTo')?.value || '';
-    
-    let filteredPatients = mockData.patients.filter(patient => {
-        let matches = true;
-        if (search) {
-            matches = matches && (patient.name.toLowerCase().includes(search) || patient.condition.toLowerCase().includes(search));
-        }
-        if (status !== 'All') {
-            matches = matches && (patient.status === status);
-        }
-        if (dateFrom && dateTo) {
-            matches = matches && (patient.lastVisit >= dateFrom && patient.lastVisit <= dateTo);
-        }
-        return matches;
-    });
-    
-    updatePatientsTable(filteredPatients);
-}
-
-function filterAppointments() {
-    const search = document.getElementById('appointmentSearch')?.value.toLowerCase() || '';
-    const dateFrom = document.getElementById('appointmentDateFrom')?.value || '';
-    const dateTo = document.getElementById('appointmentDateTo')?.value || '';
-    
-    let filteredAppointments = mockData.appointments.filter(apt => {
-        let matches = true;
-        if (search) {
-            matches = matches && (apt.patient.toLowerCase().includes(search) || apt.doctor.toLowerCase().includes(search));
-        }
-        if (dateFrom && dateTo) {
-            matches = matches && (apt.date >= dateFrom && apt.date <= dateTo);
-        }
-        return matches;
-    });
-    
-    updateAppointmentsTable(filteredAppointments);
-}
-
-function filterPrescriptions() {
-    const search = document.getElementById('prescriptionSearch')?.value.toLowerCase() || '';
-    
-    let filteredPrescriptions = mockData.prescriptions.filter(pres => {
-        let matches = true;
-        if (search) {
-            matches = matches && (pres.patient.toLowerCase().includes(search) || pres.medication.toLowerCase().includes(search));
-        }
-        return matches;
-    });
-    
-    updatePrescriptionsTable(filteredPrescriptions);
-}
-
-// Update table functions for filtered data
-function updateDoctorsTable(doctors) {
-    const tbody = document.getElementById('doctorsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    doctors.forEach(doctor => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${doctor.name}</td>
-            <td>${doctor.specialty}</td>
-            <td><span class="badge bg-${doctor.status === 'Active' ? 'success' : 'secondary'}">${doctor.status}</span></td>
-            <td>${doctor.patients}</td>
-            <td>${doctor.experience}</td>
-            <td>
-                <div>${doctor.contact}</div>
-                <small class="text-muted">${doctor.phone}</small>
-            </td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editDoctor(${doctor.id})">Edit</button>
-                <button class="btn btn-sm btn-info me-1" onclick="viewDoctorSchedule(${doctor.id})">Schedule</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteDoctor(${doctor.id})">Delete</button>
-            </td>
-        `;
-    });
-}
-
-function updatePatientsTable(patients) {
-    const tbody = document.getElementById('patientsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    patients.forEach(patient => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${patient.name}</td>
-            <td>${patient.ageGender}</td>
-            <td><span class="badge bg-${patient.status === 'Active' ? 'success' : 'secondary'}">${patient.status}</span></td>
-            <td>${patient.lastVisit}</td>
-            <td>${patient.condition}</td>
-            <td>${patient.doctor}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editPatient(${patient.id})">Edit</button>
-                <button class="btn btn-sm btn-info me-1" onclick="viewPatientHistory(${patient.id})">History</button>
-                <button class="btn btn-sm btn-danger" onclick="deletePatient(${patient.id})">Delete</button>
-            </td>
-        `;
-    });
-}
-
-function updateAppointmentsTable(appointments) {
-    const tbody = document.getElementById('appointmentsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    appointments.forEach(apt => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${apt.patient}</td>
-            <td>${apt.doctor}</td>
-            <td>${apt.date}</td>
-            <td>${apt.time}</td>
-            <td>${apt.duration}</td>
-            <td>${apt.type}</td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editAppointment(${apt.id})">Edit</button>
-                <button class="btn btn-sm btn-success me-1" onclick="confirmAppointment(${apt.id})">Confirm</button>
-                <button class="btn btn-sm btn-danger" onclick="cancelAppointment(${apt.id})">Cancel</button>
-            </td>
-        `;
-    });
-}
-
-function updatePrescriptionsTable(prescriptions) {
-    const tbody = document.getElementById('prescriptionsTable');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    prescriptions.forEach(prescription => {
-        const row = tbody.insertRow();
-        row.innerHTML = `
-            <td>${prescription.patient}</td>
-            <td>${prescription.medication}</td>
-            <td>${prescription.dosage}</td>
-            <td>${prescription.frequency}</td>
-            <td>${prescription.start}</td>
-            <td>${prescription.end}</td>
-            <td><span class="badge bg-success">${prescription.status}</span></td>
-            <td>
-                <button class="btn btn-sm btn-primary me-1" onclick="editPrescription(${prescription.id})">Edit</button>
-                <button class="btn btn-sm btn-info me-1" onclick="renewPrescription(${prescription.id})">Renew</button>
-                <button class="btn btn-sm btn-secondary" onclick="printPrescription(${prescription.id})">Print</button>
-            </td>
-        `;
-    });
-}
-
-// Multi-step Modal Functions
-function setupDoctorModal() {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const saveBtn = document.getElementById('saveDoctor');
-    
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            if (currentStep < 3) {
-                hideStep(currentStep);
-                currentStep++;
-                showStep(currentStep);
-                updateStepperDoctor();
-                updateDoctorModalButtons();
+            // Mobile sidebar toggle
+            const toggleSidebar = document.getElementById('toggleSidebar');
+            if (toggleSidebar) {
+                toggleSidebar.addEventListener('click', handleToggleSidebar);
             }
-        });
-    }
-    
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            if (currentStep > 1) {
-                hideStep(currentStep);
-                currentStep--;
-                showStep(currentStep);
-                updateStepperDoctor();
-                updateDoctorModalButtons();
+
+            // Notification handling
+            const notificationBell = document.getElementById('notificationBell');
+            if (notificationBell) {
+                notificationBell.addEventListener('click', toggleNotifications);
             }
-        });
-    }
-    
-    if (saveBtn) {
-        saveBtn.addEventListener('click', saveDoctor);
-    }
-}
+            document.addEventListener('click', handleOutsideClick);
 
-function setupPatientModal() {
-    const nextBtn = document.getElementById('patientNext');
-    const prevBtn = document.getElementById('patientPrev');
-    const saveBtn = document.getElementById('savePatient');
-    
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            if (currentPatientStep < 2) {
-                hidePatientStep(currentPatientStep);
-                currentPatientStep++;
-                showPatientStep(currentPatientStep);
-                updateStepperPatient();
-                updatePatientModalButtons();
+            // Multi-step modals
+            setupDoctorModal();
+            setupPatientModal();
+
+            // Form submissions
+            setupFormHandlers();
+
+            // Filter buttons
+            setupFilterHandlers();
+
+            // Role form
+            const roleForm = document.getElementById('roleForm');
+            if (roleForm) {
+                roleForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    showAlert('Permissions updated successfully!', 'success');
+                });
             }
-        });
-    }
-    
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            if (currentPatientStep > 1) {
-                hidePatientStep(currentPatientStep);
-                currentPatientStep--;
-                showPatientStep(currentPatientStep);
-                updateStepperPatient();
-                updatePatientModalButtons();
-            }
-        });
-    }
-    
-    if (saveBtn) {
-        saveBtn.addEventListener('click', savePatient);
-    }
-}
 
-function hideStep(step) {
-    const stepElement = document.querySelector(`#addDoctorModal .step-content[data-step="${step}"]`);
-    if (stepElement) {
-        stepElement.classList.add('hidden');
-    }
-}
+            // Window resize handler
+            window.addEventListener('resize', handleWindowResize);
 
-function showStep(step) {
-    const stepElement = document.querySelector(`#addDoctorModal .step-content[data-step="${step}"]`);
-    if (stepElement) {
-        stepElement.classList.remove('hidden');
-    }
-}
-
-function hidePatientStep(step) {
-    const stepElement = document.querySelector(`#addPatientModal .step-content[data-step="${step}"]`);
-    if (stepElement) {
-        stepElement.classList.add('hidden');
-    }
-}
-
-function showPatientStep(step) {
-    const stepElement = document.querySelector(`#addPatientModal .step-content[data-step="${step}"]`);
-    if (stepElement) {
-        stepElement.classList.remove('hidden');
-    }
-}
-
-function updateStepperDoctor() {
-    const steps = document.querySelectorAll('#doctorStepper .step');
-    steps.forEach((step, index) => {
-        const stepNum = index + 1;
-        step.classList.remove('active', 'completed');
-        if (stepNum < currentStep) {
-            step.classList.add('completed');
-        } else if (stepNum === currentStep) {
-            step.classList.add('active');
+            // Keyboard shortcuts
+            document.addEventListener('keydown', handleKeyboardShortcuts);
         }
-    });
-}
 
-function updateStepperPatient() {
-    const steps = document.querySelectorAll('#addPatientModal .step');
-    steps.forEach((step, index) => {
-        const stepNum = index + 1;
-        step.classList.remove('active', 'completed');
-        if (stepNum < currentPatientStep) {
-            step.classList.add('completed');
-        } else if (stepNum === currentPatientStep) {
-            step.classList.add('active');
-        }
-    });
-}
-
-function updateDoctorModalButtons() {
-    const nextBtn = document.getElementById('nextStep');
-    const prevBtn = document.getElementById('prevStep');
-    const saveBtn = document.getElementById('saveDoctor');
-    
-    if (prevBtn) prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-block';
-    if (nextBtn) nextBtn.style.display = currentStep === 3 ? 'none' : 'inline-block';
-    if (saveBtn) saveBtn.style.display = currentStep === 3 ? 'inline-block' : 'none';
-}
-
-function updatePatientModalButtons() {
-    const nextBtn = document.getElementById('patientNext');
-    const prevBtn = document.getElementById('patientPrev');
-    const saveBtn = document.getElementById('savePatient');
-    
-    if (prevBtn) prevBtn.style.display = currentPatientStep === 1 ? 'none' : 'inline-block';
-    if (nextBtn) nextBtn.style.display = currentPatientStep === 2 ? 'none' : 'inline-block';
-    if (saveBtn) saveBtn.style.display = currentPatientStep === 2 ? 'inline-block' : 'none';
-}
-
-// Form Handlers
-function setupFormHandlers() {
-    // Profile form submission
-    const profileForm = document.getElementById('profileForm');
-    if (profileForm) {
-        profileForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            saveEditProfile();
-        });
-    }
-
-    // Reset modal states when modals are closed
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('hidden.bs.modal', function () {
-            const form = this.querySelector('form');
-            if (form) form.reset();
+        // Navigation and Section Management
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
             
-            // Reset multi-step modals
-            if (this.id === 'addDoctorModal') {
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                const activeNavItem = document.querySelector(`[data-section="${sectionId}"]`);
+                if (activeNavItem) {
+                    activeNavItem.classList.add('active');
+                }
+                // Trigger any section-specific initialization
+                if (typeof window[`init${sectionId.replace(/-/g, '')}`] === 'function') {
+                    window[`init${sectionId.replace(/-/g, '')}`]();
+                }
+            }
+        }
+
+        // Populate All Sections with Mock Data
+        function populateAllSections() {
+            populateOrganizations();
+            populateDoctors();
+            populatePatients();
+            populateAppointments();
+            populatePrescriptions();
+            populateLaboratory();
+            populatePharmacy();
+            populateInventory();
+            populateAmbulance();
+            populateBloodBank();
+            populateBilling();
+            populateDepartments();
+            populateStaff();
+            populateDocuments();
+            populateReports();
+            populateNotifications();
+            populateStaffTasks();
+            populateCareTips();
+            populateActivityTable();
+            populateIntegrationsList();
+            populateRevenueTable();
+            populateTodaySchedule();
+        }
+
+        function populateOrganizations() {
+            const tableBody = document.getElementById('organizationsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.organizations.map(org => `
+                    <tr>
+                        <td>${org.name}</td>
+                        <td>${org.type}</td>
+                        <td><span class="badge bg-${org.status.toLowerCase()}">${org.tier}</span></td>
+                        <td>${org.doctors}</td>
+                        <td>${org.revenue}</td>
+                        <td><span class="badge bg-${org.status.toLowerCase()}">${org.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">Edit</button> <button class="btn btn-sm btn-danger">Delete</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateDoctors() {
+            const tableBody = document.getElementById('doctorsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.doctors.map(doc => `
+                    <tr>
+                        <td>${doc.name}</td>
+                        <td>${doc.specialty}</td>
+                        <td>${doc.department}</td>
+                        <td>${doc.patients}</td>
+                        <td><span class="badge bg-${doc.status.toLowerCase()}">${doc.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">Edit</button> <button class="btn btn-sm btn-danger">Deactivate</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populatePatients() {
+            const tableBody = document.getElementById('patientsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.patients.map(patient => `
+                    <tr>
+                        <td>${patient.name}</td>
+                        <td>${patient.demographics}</td>
+                        <td>${patient.history}</td>
+                        <td>${patient.lastVisit}</td>
+                        <td>${patient.doctor}</td>
+                        <td><button class="btn btn-sm btn-info">View EHR</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateAppointments() {
+            const tableBody = document.getElementById('appointmentsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.appointments.map(apt => `
+                    <tr>
+                        <td>${apt.patient}</td>
+                        <td>${apt.doctor}</td>
+                        <td>${apt.dateTime}</td>
+                        <td>${apt.duration}</td>
+                        <td>${apt.type}</td>
+                        <td><span class="badge bg-success">${apt.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">Edit</button> <button class="btn btn-sm btn-danger">Cancel</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populatePrescriptions() {
+            const tableBody = document.getElementById('prescriptionsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.prescriptions.map(pres => `
+                    <tr>
+                        <td>${pres.patient}</td>
+                        <td>${pres.medication}</td>
+                        <td>${pres.dosageFreq}</td>
+                        <td>${pres.duration}</td>
+                        <td><span class="badge bg-${pres.pharmacyStatus.toLowerCase()}">${pres.pharmacyStatus}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${pres.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateLaboratory() {
+            const tableBody = document.getElementById('labTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.laboratory.map(test => `
+                    <tr>
+                        <td>${test.patient}</td>
+                        <td>${test.testType}</td>
+                        <td>${test.orderedBy}</td>
+                        <td>${test.dateOrdered}</td>
+                        <td><span class="badge bg-${test.status.toLowerCase()}">${test.status}</span></td>
+                        <td><button class="btn btn-sm btn-info">${test.results}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populatePharmacy() {
+            const tableBody = document.getElementById('pharmacyTable');
+            if (tableBody) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td>Lisinopril</td>
+                        <td>150 units</td>
+                        <td>2026-03-01</td>
+                        <td>PKR 50</td>
+                        <td>Integrated</td>
+                        <td><button class="btn btn-sm btn-primary">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td>Metformin</td>
+                        <td>200 units</td>
+                        <td>2025-12-15</td>
+                        <td>PKR 30</td>
+                        <td>Pending</td>
+                        <td><button class="btn btn-sm btn-primary">Edit</button></td>
+                    </tr>
+                `;
+            }
+        }
+
+        function populateInventory() {
+            const tableBody = document.getElementById('inventoryTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.inventory.map(item => `
+                    <tr>
+                        <td>${item.item}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.supplier}</td>
+                        <td>${item.expiry}</td>
+                        <td><span class="badge bg-${item.alert === 'Low' ? 'warning' : 'success'}">${item.alert}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${item.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateAmbulance() {
+            const tableBody = document.getElementById('ambulanceTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.ambulance.map(req => `
+                    <tr>
+                        <td>${req.id}</td>
+                        <td>${req.patient}</td>
+                        <td>${req.location}</td>
+                        <td><span class="badge bg-info">${req.status}</span></td>
+                        <td>${req.eta}</td>
+                        <td><button class="btn btn-sm btn-primary">${req.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateBloodBank() {
+            const tableBody = document.getElementById('bloodBankTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.bloodBank.map(entry => `
+                    <tr>
+                        <td>${entry.type}</td>
+                        <td>${entry.units}</td>
+                        <td>${entry.donor}</td>
+                        <td>${entry.expiry}</td>
+                        <td><span class="badge bg-${entry.status.toLowerCase()}">${entry.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${entry.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateBilling() {
+            const tableBody = document.getElementById('billingTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.billing.map(inv => `
+                    <tr>
+                        <td>${inv.id}</td>
+                        <td>${inv.patient}</td>
+                        <td>PKR ${inv.amount}</td>
+                        <td><span class="badge bg-${inv.insurance.toLowerCase()}">${inv.insurance}</span></td>
+                        <td>${inv.date}</td>
+                        <td><button class="btn btn-sm btn-primary">${inv.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateDepartments() {
+            const tableBody = document.getElementById('departmentsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.departments.map(dept => `
+                    <tr>
+                        <td>${dept.name}</td>
+                        <td>${dept.head}</td>
+                        <td>${dept.staff}</td>
+                        <td>${dept.allocation}</td>
+                        <td><span class="badge bg-${dept.status.toLowerCase()}">${dept.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${dept.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateStaff() {
+            const tableBody = document.getElementById('staffTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.staff.map(member => `
+                    <tr>
+                        <td>${member.name}</td>
+                        <td>${member.role}</td>
+                        <td>${member.department}</td>
+                        <td>${member.schedule}</td>
+                        <td><span class="badge bg-${member.status.toLowerCase()}">${member.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${member.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateDocuments() {
+            const tableBody = document.getElementById('documentsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.documents.map(doc => `
+                    <tr>
+                        <td>${doc.name}</td>
+                        <td>${doc.patient}</td>
+                        <td>${doc.type}</td>
+                        <td>${doc.date}</td>
+                        <td>${doc.access}</td>
+                        <td><button class="btn btn-sm btn-info">${doc.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateReports() {
+            // Assuming a reports table if added
+            const tableBody = document.getElementById('reportsTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.reports.map(report => `
+                    <tr>
+                        <td>${report.report}</td>
+                        <td>${report.date}</td>
+                        <td><span class="badge bg-success">${report.status}</span></td>
+                        <td><button class="btn btn-sm btn-primary">${report.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateNotifications() {
+            const dropdown = document.getElementById('notificationsDropdown');
+            if (dropdown) {
+                dropdown.innerHTML = mockData.notifications.map(notif => `
+                    <div class="notification-item ${notif.read ? 'read' : ''}">
+                        <div>${notif.message}</div>
+                        <small class="text-muted">${notif.time}</small>
+                    </div>
+                `).join('');
+            }
+            const count = document.getElementById('notificationCount');
+            if (count) {
+                const unread = mockData.notifications.filter(n => !n.read).length;
+                count.textContent = unread || '';
+                count.style.display = unread > 0 ? 'inline' : 'none';
+            }
+        }
+
+        function populateStaffTasks() {
+            const tableBody = document.getElementById('staffTasks');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.staffTasks.map(task => `
+                    <tr>
+                        <td>${task.task}</td>
+                        <td><span class="badge bg-${task.priority.toLowerCase()}">${task.priority}</span></td>
+                        <td><span class="badge bg-${task.status.toLowerCase()}">${task.status}</span></td>
+                        <td><button class="btn btn-sm btn-success">${task.actions}</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateCareTips() {
+            const list = document.getElementById('careTips');
+            if (list) {
+                list.innerHTML = mockData.careTips.map(tip => `<li>${tip}</li>`).join('');
+            }
+        }
+
+        function populateActivityTable() {
+            const tableBody = document.getElementById('activityTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.activityTable.map(row => `
+                    <tr>
+                        <td>${row.date}</td>
+                        <td>${row.steps}</td>
+                        <td>${row.calories}</td>
+                        <td><span class="badge bg-success">${row.progress}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateIntegrationsList() {
+            const list = document.getElementById('integrationsList');
+            if (list) {
+                list.innerHTML = mockData.integrationsList.map(integ => `<li>${integ}</li>`).join('');
+            }
+        }
+
+        function populateRevenueTable() {
+            const tableBody = document.getElementById('revenueTable');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.revenueTable.map(row => `
+                    <tr>
+                        <td>${row.org}</td>
+                        <td>${row.revenue}</td>
+                        <td><span class="badge bg-${row.status.toLowerCase()}">${row.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function populateTodaySchedule() {
+            const tableBody = document.getElementById('todaySchedule');
+            if (tableBody) {
+                tableBody.innerHTML = mockData.todaySchedule.map(sched => `
+                    <tr>
+                        <td>${sched.patient}</td>
+                        <td>${sched.time}</td>
+                        <td>${sched.duration}</td>
+                        <td><span class="badge bg-info">${sched.type}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Charts Initialization
+        function initializeCharts() {
+            // Onboarding Chart
+            const onboardingCtx = document.getElementById('onboardingChart');
+            if (onboardingCtx) {
+                charts.onboarding = new Chart(onboardingCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                        datasets: [{
+                            label: 'New Clients',
+                            data: [12, 19, 3, 5, 2, 3, 7, 12, 5],
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                });
+            }
+
+            // Department Chart
+            const deptCtx = document.getElementById('departmentChart');
+            if (deptCtx) {
+                charts.department = new Chart(deptCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Cardiology', 'Neurology', 'Pediatrics'],
+                        datasets: [{
+                            data: [45, 30, 25],
+                            backgroundColor: ['#007bff', '#28a745', '#ffc107']
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+
+            // Patient History Chart
+            const patientHistoryCtx = document.getElementById('patientHistoryChart');
+            if (patientHistoryCtx) {
+                charts.patientHistory = new Chart(patientHistoryCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar'],
+                        datasets: [{
+                            label: 'Visits',
+                            data: [65, 59, 80],
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)'
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                });
+            }
+
+            // Patient Health Chart
+            const patientHealthCtx = document.getElementById('patientHealthChart');
+            if (patientHealthCtx) {
+                charts.patientHealth = new Chart(patientHealthCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                        datasets: [{
+                            label: 'Blood Pressure',
+                            data: [120, 118, 122, 119],
+                            borderColor: '#dc3545',
+                            tension: 0.1
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: false } } }
+                });
+            }
+
+            // Monitoring Chart
+            const monitoringCtx = document.getElementById('monitoringChart');
+            if (monitoringCtx) {
+                charts.monitoring = new Chart(monitoringCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                        datasets: [{
+                            label: 'Heart Rate',
+                            data: [72, 74, 70, 75, 73],
+                            borderColor: '#28a745',
+                            tension: 0.1
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: false } } }
+                });
+            }
+
+            // Fitness Chart
+            const fitnessCtx = document.getElementById('fitnessChart');
+            if (fitnessCtx) {
+                charts.fitness = new Chart(fitnessCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Steps', 'Calories'],
+                        datasets: [{
+                            data: [10000, 500],
+                            backgroundColor: ['#007bff', '#28a745']
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                });
+            }
+
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                charts.revenue = new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Revenue (PKR)',
+                            data: [120000, 190000, 300000, 500000, 200000, 300000],
+                            borderColor: '#007bff',
+                            tension: 0.1
+                        }]
+                    },
+                    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                });
+            }
+        }
+
+        // Real-Time Features Setup (Mock)
+        function setupRealTimeFeatures() {
+            // Simulate real-time notifications
+            setInterval(() => {
+                if (Math.random() > 0.8) {
+                    mockData.notifications.unshift({
+                        id: Date.now(),
+                        message: `New update: Patient ${['John', 'Emily'][Math.floor(Math.random()*2)]} checked in`,
+                        time: 'Just now',
+                        read: false
+                    });
+                    populateNotifications();
+                }
+            }, 30000); // Every 30 seconds
+
+            // Simulate data refresh
+            setInterval(populateAllSections, 60000); // Every minute
+        }
+
+        // Search Functionality
+        function handleGlobalSearch(e) {
+            const query = e.target.value.toLowerCase();
+            // Highlight search results across sections
+            document.querySelectorAll('.content-section td, .content-section li').forEach(el => {
+                el.innerHTML = el.innerHTML.replace(/<mark>/g, '').replace(/<\/mark>/g, '');
+                if (el.textContent.toLowerCase().includes(query)) {
+                    el.innerHTML = el.innerHTML.replace(new RegExp(query, 'gi'), '<mark>$&</mark>');
+                }
+            });
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Sidebar Toggle
+        function handleToggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            sidebar.classList.toggle('show');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // Notifications
+        function toggleNotifications(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('notificationsDropdown');
+            dropdown.classList.toggle('show');
+            // Mark as read
+            mockData.notifications.forEach(n => n.read = true);
+            populateNotifications();
+        }
+
+        function handleOutsideClick(e) {
+            const dropdown = document.getElementById('notificationsDropdown');
+            const bell = document.getElementById('notificationBell');
+            if (!dropdown.contains(e.target) && !bell.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        }
+
+        // Multi-Step Modals
+        function setupDoctorModal() {
+            const nextBtn = document.getElementById('nextStep');
+            const prevBtn = document.getElementById('prevStep');
+            const saveBtn = document.getElementById('saveDoctor');
+            const stepper = document.getElementById('doctorStepper');
+
+            nextBtn.addEventListener('click', () => {
+                if (currentStep < 3) {
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.add('hidden');
+                    document.querySelector(`[data-step="${currentStep}"] .step`).classList.remove('active');
+                    currentStep++;
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.remove('hidden');
+                    document.querySelector(`[data-step="${currentStep}"] .step`).classList.add('active');
+                    if (currentStep === 3) {
+                        saveBtn.style.display = 'inline-block';
+                        nextBtn.style.display = 'none';
+                    }
+                    prevBtn.style.display = currentStep > 1 ? 'inline-block' : 'none';
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.add('hidden');
+                    document.querySelector(`[data-step="${currentStep}"] .step`).classList.remove('active');
+                    currentStep--;
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.remove('hidden');
+                    document.querySelector(`[data-step="${currentStep}"] .step`).classList.add('active');
+                    saveBtn.style.display = currentStep === 3 ? 'inline-block' : 'none';
+                    nextBtn.style.display = currentStep < 3 ? 'inline-block' : 'none';
+                    prevBtn.style.display = currentStep > 1 ? 'inline-block' : 'none';
+                }
+            });
+
+            saveBtn.addEventListener('click', () => {
+                showAlert('Doctor added successfully!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('addDoctorModal')).hide();
                 currentStep = 1;
-                hideStep(2);
-                hideStep(3);
-                showStep(1);
-                updateStepperDoctor();
-                updateDoctorModalButtons();
-            }
-            
-            if (this.id === 'addPatientModal') {
+                // Reset stepper
+                stepper.querySelectorAll('.step').forEach((step, idx) => {
+                    step.classList.toggle('active', idx + 1 === 1);
+                    step.classList.toggle('completed', idx + 1 < 1);
+                });
+                document.querySelectorAll('.step-content').forEach(content => content.classList.add('hidden'));
+                document.querySelector('[data-step="1"]').classList.remove('hidden');
+                nextBtn.style.display = 'inline-block';
+                saveBtn.style.display = 'none';
+                prevBtn.style.display = 'none';
+                document.getElementById('addDoctorForm').reset();
+            });
+        }
+
+        function setupPatientModal() {
+            const nextBtn = document.getElementById('patientNext');
+            const prevBtn = document.getElementById('patientPrev');
+            const saveBtn = document.getElementById('savePatient');
+            const stepper = document.querySelector('#addPatientModal .stepper');
+
+            nextBtn.addEventListener('click', () => {
+                if (currentPatientStep < 2) {
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"]').classList.add('hidden');
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"].step').classList.remove('active');
+                    currentPatientStep++;
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"]').classList.remove('hidden');
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"].step').classList.add('active');
+                    if (currentPatientStep === 2) {
+                        saveBtn.style.display = 'inline-block';
+                        nextBtn.style.display = 'none';
+                    }
+                    prevBtn.style.display = currentPatientStep > 1 ? 'inline-block' : 'none';
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentPatientStep > 1) {
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"]').classList.add('hidden');
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"].step').classList.remove('active');
+                    currentPatientStep--;
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"]').classList.remove('hidden');
+                    document.querySelector('#addPatientModal [data-step="' + currentPatientStep + '"].step').classList.add('active');
+                    saveBtn.style.display = currentPatientStep === 2 ? 'inline-block' : 'none';
+                    nextBtn.style.display = currentPatientStep < 2 ? 'inline-block' : 'none';
+                    prevBtn.style.display = currentPatientStep > 1 ? 'inline-block' : 'none';
+                }
+            });
+
+            saveBtn.addEventListener('click', () => {
+                showAlert('Patient registered successfully!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('addPatientModal')).hide();
                 currentPatientStep = 1;
-                hidePatientStep(2);
-                showPatientStep(1);
-                updateStepperPatient();
-                updatePatientModalButtons();
-            }
-        });
-    });
-}
-
-// CRUD Operations and Actions
-function saveDoctor() {
-    const form = document.getElementById('addDoctorForm');
-    const formData = new FormData(form);
-    
-    // In a real application, this would send data to the server
-    console.log('Saving doctor:', Object.fromEntries(formData));
-    showAlert('Doctor added successfully!', 'success');
-    
-    // Close modal and refresh table
-    const modal = bootstrap.Modal.getInstance(document.getElementById('addDoctorModal'));
-    modal.hide();
-    populateDoctorsTable();
-}
-
-function savePatient() {
-    const form = document.getElementById('addPatientForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving patient:', Object.fromEntries(formData));
-    showAlert('Patient added successfully!', 'success');
-    
-    const modal = bootstrap.Modal.getInstance(document.getElementById('addPatientModal'));
-    modal.hide();
-    populatePatientsTable();
-}
-
-function saveAppointment() {
-    const form = document.getElementById('scheduleForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving appointment:', Object.fromEntries(formData));
-    showAlert('Appointment saved successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('scheduleAppointmentModal'));
-    modal.hide();
-    populateAppointmentsTable();
-}
-
-function savePrescription() {
-    const form = document.getElementById('prescriptionForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving prescription:', Object.fromEntries(formData));
-    showAlert('Prescription saved successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('addPrescriptionModal'));
-    modal.hide();
-    populatePrescriptionsTable();
-}
-
-function savePharmacyItem() {
-    const form = document.getElementById('pharmacyForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving pharmacy item:', Object.fromEntries(formData));
-    showAlert('Pharmacy item added successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('addPharmacyItemModal'));
-    modal.hide();
-    populatePharmacyTable();
-}
-
-function saveBloodEntry() {
-    const form = document.getElementById('bloodForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving blood entry:', Object.fromEntries(formData));
-    showAlert('Blood entry added successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('addBloodEntryModal'));
-    modal.hide();
-    populateBloodBankTable();
-}
-
-function saveInventoryItem() {
-    const form = document.getElementById('inventoryForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving inventory item:', Object.fromEntries(formData));
-    showAlert('Inventory item added successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('addInventoryItemModal'));
-    modal.hide();
-    populateInventoryTable();
-}
-
-function saveStaff() {
-    const form = document.getElementById('staffForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving staff:', Object.fromEntries(formData));
-    showAlert('Staff added successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('addStaffModal'));
-    modal.hide();
-    populateStaffTable();
-}
-
-function saveSession() {
-    const form = document.getElementById('sessionForm');
-    const formData = new FormData(form);
-    
-    console.log('Scheduling session:', Object.fromEntries(formData));
-    showAlert('Session scheduled successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('scheduleSessionModal'));
-    modal.hide();
-}
-
-function saveDepartment() {
-    const form = document.getElementById('departmentForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving department:', Object.fromEntries(formData));
-    showAlert('Department added successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('addDepartmentModal'));
-    modal.hide();
-    populateDepartmentsTable();
-}
-
-function saveInvoice() {
-    const form = document.getElementById('invoiceForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving invoice:', Object.fromEntries(formData));
-    showAlert('Invoice created successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('newInvoiceModal'));
-    modal.hide();
-    populateBillingTable();
-}
-
-function saveAmbulanceRequest() {
-    const form = document.getElementById('ambulanceForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving ambulance request:', Object.fromEntries(formData));
-    showAlert('Ambulance request saved successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('newAmbulanceModal'));
-    modal.hide();
-    populateAmbulanceTable();
-}
-
-function saveEditProfile() {
-    const form = document.getElementById('editProfileForm');
-    const formData = new FormData(form);
-    
-    console.log('Saving profile:', Object.fromEntries(formData));
-    showAlert('Profile updated successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
-    modal.hide();
-    
-    // Update profile display
-    const profileName = document.getElementById('profileName');
-    const profileEmail = document.getElementById('profileEmail');
-    const profileRole = document.getElementById('profileRole');
-    
-    if (profileName) profileName.innerHTML = `<strong>Name:</strong> ${formData.get('name')}`;
-    if (profileEmail) profileEmail.innerHTML = `<strong>Email:</strong> ${formData.get('email')}`;
-    if (profileRole) profileRole.innerHTML = `<strong>Role:</strong> ${formData.get('role')}`;
-}
-
-function uploadDocument() {
-    const form = document.getElementById('documentForm');
-    const formData = new FormData(form);
-    
-    console.log('Uploading document:', Object.fromEntries(formData));
-    showAlert('Document uploaded successfully!', 'success');
-    const modal = bootstrap.Modal.getInstance(document.getElementById('uploadDocumentModal'));
-    modal.hide();
-    populateDocumentsTable();
-}
-
-function simulateOCR() {
-    const ocrResult = document.getElementById('ocrResult');
-    if (ocrResult) {
-        ocrResult.classList.remove('hidden');
-        const textarea = ocrResult.querySelector('textarea');
-        textarea.value = 'Simulated OCR Result:\nPatient Name: John Smith\nDiagnosis: Hypertension\nDate: 2025-09-10';
-        showAlert('OCR simulation completed!', 'success');
-    }
-}
-
-// Action Functions
-function editDoctor(id) {
-    const doctor = mockData.doctors.find(d => d.id === id);
-    if (doctor) {
-        showAlert(`Editing doctor: ${doctor.name}`, 'info');
-        const modal = new bootstrap.Modal(document.getElementById('addDoctorModal'));
-        // Populate form with doctor data (implementation depends on requirements)
-        modal.show();
-    }
-}
-
-function viewDoctorSchedule(id) {
-    showAlert(`Viewing schedule for doctor ID: ${id}`, 'info');
-}
-
-function deleteDoctor(id) {
-    if (confirm('Are you sure you want to delete this doctor?')) {
-        mockData.doctors = mockData.doctors.filter(d => d.id !== id);
-        showAlert(`Doctor with ID ${id} deleted successfully`, 'success');
-        populateDoctorsTable();
-    }
-}
-
-function editPatient(id) {
-    const patient = mockData.patients.find(p => p.id === id);
-    if (patient) {
-        showAlert(`Editing patient: ${patient.name}`, 'info');
-        const modal = new bootstrap.Modal(document.getElementById('addPatientModal'));
-        // Populate form with patient data (implementation depends on requirements)
-        modal.show();
-    }
-}
-
-function viewPatientHistory(id) {
-    showAlert(`Viewing history for patient ID: ${id}`, 'info');
-}
-
-function deletePatient(id) {
-    if (confirm('Are you sure you want to delete this patient?')) {
-        mockData.patients = mockData.patients.filter(p => p.id !== id);
-        showAlert(`Patient with ID ${id} deleted successfully`, 'success');
-        populatePatientsTable();
-    }
-}
-
-function editAppointment(id) {
-    const appointment = mockData.appointments.find(a => a.id === id);
-    if (appointment) {
-        showAlert(`Editing appointment for ${appointment.patient}`, 'info');
-        const modal = new bootstrap.Modal(document.getElementById('scheduleAppointmentModal'));
-        // Populate form with appointment data (implementation depends on requirements)
-        modal.show();
-    }
-}
-
-function confirmAppointment(id) {
-    const appointment = mockData.appointments.find(a => a.id === id);
-    if (appointment) {
-        appointment.status = 'Confirmed';
-        showAlert(`Appointment with ID ${id} confirmed`, 'success');
-        populateAppointmentsTable();
-    }
-}
-
-function cancelAppointment(id) {
-    if (confirm('Are you sure you want to cancel this appointment?')) {
-        mockData.appointments = mockData.appointments.filter(a => a.id !== id);
-        showAlert(`Appointment with ID ${id} cancelled`, 'warning');
-        populateAppointmentsTable();
-    }
-}
-
-function editPrescription(id) {
-    const prescription = mockData.prescriptions.find(p => p.id === id);
-    if (prescription) {
-        showAlert(`Editing prescription for ${prescription.patient}`, 'info');
-        const modal = new bootstrap.Modal(document.getElementById('addPrescriptionModal'));
-        // Populate form with prescription data (implementation depends on requirements)
-        modal.show();
-    }
-}
-
-function renewPrescription(id) {
-    const prescription = mockData.prescriptions.find(p => p.id === id);
-    if (prescription) {
-        prescription.end = new Date(new Date(prescription.end).setMonth(new Date(prescription.end).getMonth() + 3)).toISOString().split('T')[0];
-        showAlert(`Prescription with ID ${id} renewed`, 'success');
-        populatePrescriptionsTable();
-    }
-}
-
-function printPrescription(id) {
-    showAlert(`Printing prescription with ID: ${id}`, 'info');
-}
-
-function trackAmbulance(id) {
-    showAlert(`Tracking ambulance ${id}`, 'info');
-}
-
-function updateAmbulanceStatus(id) {
-    const request = mockData.ambulance.find(a => a.id === id);
-    if (request) {
-        const statuses = ['Dispatched', 'En Route', 'Arrived', 'Completed'];
-        const currentIndex = statuses.indexOf(request.status);
-        request.status = statuses[(currentIndex + 1) % statuses.length];
-        showAlert(`Ambulance ${id} status updated to ${request.status}`, 'info');
-        populateAmbulanceTable();
-    }
-}
-
-function cancelAmbulanceRequest(id) {
-    if (confirm('Are you sure you want to cancel this ambulance request?')) {
-        mockData.ambulance = mockData.ambulance.filter(a => a.id !== id);
-        showAlert(`Ambulance request ${id} cancelled`, 'warning');
-        populateAmbulanceTable();
-    }
-}
-
-function editPharmacyItem(id) {
-    const item = mockData.pharmacy.find(p => p.id === id);
-    if (item) {
-        showAlert(`Editing pharmacy item: ${item.medication}`, 'info');
-        const modal = new bootstrap.Modal(document.getElementById('addPharmacyItemModal'));
-        // Populate form with item data (implementation depends on requirements)
-        modal.show();
-    }
-}
-
-function restockItem(id) {
-    const item = mockData.pharmacy.find(p => p.id === id);
-    if (item) {
-        item.stock += 100;
-        showAlert(`Restocking item: ${item.medication}`, 'success');
-        populatePharmacyTable();
-    }
-}
-
-function editBloodEntry(id) {
-    const entry = mockData.bloodBank.find(b => b.id === id);
-    if (entry) {
-        showAlert(`Editing blood entry: ${entry.type}`, 'info');
-        const modal = new bootstrap.Modal(document.getElementById('addBloodEntryModal'));
-        // Populate form with entry data (implementation depends on requirements)
-        modal.show();
-    }
-}
-
-function useBlood(id) {
-    if (confirm('Are you sure you want to use this blood unit?')) {
-        const entry = mockData.bloodBank.find(b => b.id === id);
-        if (entry) {
-            entry.quantity--;
-            if (entry.quantity <= 0) {
-                mockData.bloodBank = mockData.bloodBank.filter(b => b.id !== id);
-            }
-            showAlert(`Blood unit with ID ${id} used`, 'success');
-            populateBloodBankTable();
+                // Reset stepper
+                stepper.querySelectorAll('.step').forEach((step, idx) => {
+                    step.classList.toggle('active', idx + 1 === 1);
+                });
+                document.querySelectorAll('#addPatientModal .step-content').forEach(content => content.classList.add('hidden'));
+                document.querySelector('#addPatientModal [data-step="1"]').classList.remove('hidden');
+                nextBtn.style.display = 'inline-block';
+                saveBtn.style.display = 'none';
+                prevBtn.style.display = 'none';
+                document.getElementById('addPatientForm').reset();
+            });
         }
-    }
-}
 
-function viewBloodDetails(id) {
-    showAlert(`Viewing details for blood entry ID: ${id}`, 'info');
-}
+        // Form Handlers
+        function setupFormHandlers() {
+            // Generic form handler for modals
+            const forms = document.querySelectorAll('form[id$="Form"]');
+            forms.forEach(form => {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // Simulate form submission
+                    showAlert(`${form.id.replace('Form', '')} saved successfully!`, 'success');
+                    bootstrap.Modal.getInstance(form.closest('.modal')).hide();
+                    form.reset();
+                });
+            });
+        }
 
-function markPaid(id) {
-    const invoice = mockData.billing.find(inv => inv.id === id);
-    if (invoice) {
-        invoice.status = 'Paid';
-        showAlert('Invoice marked as paid!', 'success');
-        populateBillingTable();
-    }
-}
+        // Filter Handlers
+        function setupFilterHandlers() {
+            // Generic filter function
+            window.filterOrganizations = () => filterTable('organizationsTable', document.getElementById('orgSearch').value, document.getElementById('orgStatus').value);
+            window.filterDoctors = () => filterTable('doctorsTable', document.getElementById('doctorSearch').value, document.getElementById('doctorStatus').value);
+            window.filterPatients = () => filterTable('patientsTable', document.getElementById('patientSearch').value, document.getElementById('patientStatus').value);
+            window.filterAppointments = () => filterTable('appointmentsTable', document.getElementById('appointmentSearch').value);
+            window.filterPrescriptions = () => filterTable('prescriptionsTable', document.getElementById('prescriptionSearch').value);
+            window.filterLabs = () => filterTable('labTable', document.getElementById('labSearch').value, document.getElementById('labStatus').value);
+        }
 
-function viewInvoice(id) {
-    showAlert(`Viewing invoice ${id}`, 'info');
-}
+        function filterTable(tableId, searchQuery, statusFilter = 'All') {
+            const table = document.getElementById(tableId);
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const statusCell = row.querySelector('td:last-child span') ? row.querySelector('td:last-child span').textContent : '';
+                const matchesSearch = text.includes(searchQuery.toLowerCase());
+                const matchesStatus = statusFilter === 'All' || statusCell.includes(statusFilter);
+                row.style.display = matchesSearch && matchesStatus ? '' : 'none';
+            });
+        }
 
-function printInvoice(id) {
-    showAlert(`Printing invoice ${id}`, 'info');
-}
+        // Action Functions (Mock)
+        window.onboardOrg = () => {
+            showAlert('Organization onboarded successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('onboardOrgModal')).hide();
+            document.getElementById('onboardForm').reset();
+            populateOrganizations(); // Refresh data
+        };
 
-function editDepartment(id) {
-    const dept = mockData.departments.find(d => d.id === id);
-    if (dept) {
-        showAlert(`Editing department: ${dept.department}`, 'info');
-        const modal = new bootstrap.Modal(document.getElementById('addDepartmentModal'));
-        // Populate form with department data (implementation depends on requirements)
-        modal.show();
-    }
-}
+        window.orderTest = () => {
+            showAlert('Test ordered successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('orderTestModal')).hide();
+            document.getElementById('testForm').reset();
+            populateLaboratory();
+        };
 
-function manageDepartmentStaff(id) {
-    showAlert(`Managing staff for department ID: ${id}`, 'info');
-}
+        window.saveAppointment = () => {
+            showAlert('Appointment scheduled successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('scheduleAppointmentModal')).hide();
+            document.getElementById('scheduleForm').reset();
+            populateAppointments();
+        };
 
-function manageBudget(id) {
-    showAlert(`Managing budget for department ID: ${id}`, 'info');
-}
+        window.savePrescription = () => {
+            showAlert('Prescription generated successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addPrescriptionModal')).hide();
+            document.getElementById('prescriptionForm').reset();
+            populatePrescriptions();
+        };
 
-function editInventoryItem(id) {
-    const item = mockData.inventory.find(i => i.id === id);
-    if (item) {
-        showAlert(`Editing inventory item: ${item.item}`, 'info');
-        const modal = new bootstrap.Modal(document.getElementById('addInventoryItemModal'));
-        // Populate form with item data (implementation depends on requirements)
-        modal.show();
-    }
-}
+        window.saveAmbulanceRequest = () => {
+            showAlert('Ambulance request submitted!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('newAmbulanceModal')).hide();
+            document.getElementById('ambulanceForm').reset();
+            populateAmbulance();
+        };
 
-function orderItem(id) {
-    const item = mockData.inventory.find(i => i.id === id);
-    if (item) {
-        item.quantity += 100;
-        showAlert(`Ordering item: ${item.item}`, 'success');
-        populateInventoryTable();
-    }
-}
+        window.savePharmacyItem = () => {
+            showAlert('Pharmacy item added!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addPharmacyItemModal')).hide();
+            document.getElementById('pharmacyForm').reset();
+            populatePharmacy();
+        };
 
-function editStaff(id) {
-    const staff = mockData.staff.find(s => s.id === id);
-    if (staff) {
-        showAlert(`Editing staff: ${staff.name}`, 'info');
-        const modal = new bootstrap.Modal(document.getElementById('addStaffModal'));
-        // Populate form with staff data (implementation depends on requirements)
-        modal.show();
-    }
-}
+        window.saveBloodEntry = () => {
+            showAlert('Blood entry added!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addBloodEntryModal')).hide();
+            document.getElementById('bloodForm').reset();
+            populateBloodBank();
+        };
 
-function viewStaffSchedule(id) {
-    showAlert(`Viewing schedule for staff ID: ${id}`, 'info');
-}
+        window.saveInvoice = () => {
+            showAlert('Invoice created!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('newInvoiceModal')).hide();
+            document.getElementById('invoiceForm').reset();
+            populateBilling();
+        };
 
-function deleteStaff(id) {
-    if (confirm('Are you sure you want to delete this staff member?')) {
-        mockData.staff = mockData.staff.filter(s => s.id !== id);
-        showAlert(`Staff with ID ${id} deleted successfully`, 'success');
-        populateStaffTable();
-    }
-}
+        window.saveDepartment = () => {
+            showAlert('Department added!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addDepartmentModal')).hide();
+            document.getElementById('departmentForm').reset();
+            populateDepartments();
+        };
 
-function viewDocument(id) {
-    showAlert(`Viewing document with ID: ${id}`, 'info');
-}
+        window.saveInventoryItem = () => {
+            showAlert('Inventory item added!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addInventoryItemModal')).hide();
+            document.getElementById('inventoryForm').reset();
+            populateInventory();
+        };
 
-function downloadDocument(id) {
-    showAlert(`Downloading document with ID: ${id}`, 'info');
-}
+        window.saveStaff = () => {
+            showAlert('Staff member added!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addStaffModal')).hide();
+            document.getElementById('staffForm').reset();
+            populateStaff();
+        };
 
-function shareDocument(id) {
-    showAlert(`Sharing document with ID: ${id}`, 'info');
-}
+        window.saveSession = () => {
+            showAlert('Session scheduled!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('scheduleSessionModal')).hide();
+            document.getElementById('sessionForm').reset();
+        };
 
-function downloadReport(id) {
-    showAlert(`Downloading report with ID: ${id}`, 'success');
-}
+        window.uploadDocument = () => {
+            showAlert('Document uploaded and OCR processed!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('uploadDocumentModal')).hide();
+            document.getElementById('documentForm').reset();
+            populateDocuments();
+        };
 
-function viewReportStatus(id) {
-    showAlert(`Viewing status for report ID: ${id}`, 'info');
-}
+        window.saveEditProfile = () => {
+            showAlert('Profile updated!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('editProfileModal')).hide();
+        };
 
-function markMedicationTaken(button) {
-    button.textContent = 'Taken';
-    button.classList.remove('btn-outline-primary');
-    button.classList.add('btn-success');
-    button.disabled = true;
-    showAlert('Medication marked as taken', 'success');
-}
+        window.onboardClient = () => {
+            showAlert('New client onboarding started!', 'info');
+            // Trigger modal or process
+        };
 
-function markNotificationRead(id) {
-    const notification = mockData.notifications.find(n => n.id === id);
-    if (notification) {
-        notification.read = true;
-        populateNotifications();
-        showAlert('Notification marked as read', 'success');
-    }
-}
+        window.runSymptomChecker = () => {
+            const input = document.getElementById('symptomInput').value;
+            document.getElementById('triageResults').innerHTML = input ? `<p class="text-info">Based on symptoms: ${input}, recommended: Consult doctor for chest pain.</p>` : '<p class="text-warning">Please describe symptoms.</p>';
+        };
 
-// Charts and Analytics
-function initializeCharts() {
-    initializeVisitsChart();
-    initializeAnalyticsChart();
-}
+        window.recommendTests = () => {
+            const patient = document.getElementById('patientForRec').value;
+            document.getElementById('testRecs').innerHTML = patient ? '<li>Blood Glucose Test</li><li>Cholesterol Panel</li>' : '<li>Select a patient first.</li>';
+        };
 
-function initializeVisitsChart() {
-    const ctx = document.getElementById('visitsChart');
-    if (!ctx) return;
-    
-    const chartData = {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        datasets: [{
-            label: 'Patient Visits',
-            data: [45, 52, 38, 65, 59, 42, 35],
-            borderColor: 'rgb(75, 192, 192)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            tension: 0.1
-        }]
-    };
-    
-    charts.visitsChart = new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
+        window.syncFitnessData = () => {
+            showAlert('Fitness data synced successfully!', 'success');
+        };
+
+        window.generateReport = () => {
+            const type = document.getElementById('reportType').value;
+            const start = document.getElementById('reportStart').value;
+            const end = document.getElementById('reportEnd').value;
+            showAlert(`Report "${type}" generated for ${start} to ${end}!`, 'success');
+            // Simulate download
+        };
+
+        window.manageIntegrations = () => {
+            showAlert('Integration management opened!', 'info');
+        };
+
+        window.setupNotifications = () => {
+            showAlert('Notification setup configured!', 'success');
+        };
+
+        // Utility Functions
+        function showAlert(message, type = 'info') {
+            // Simple alert for demo
+            alert(`${type.toUpperCase()}: ${message}`);
+            // In production, use Bootstrap toast or similar
+        }
+
+        function handleWindowResize() {
+            // Adjust sidebar on resize
+            if (window.innerWidth > 768) {
+                document.getElementById('sidebar').classList.remove('show');
+                document.getElementById('mainContent').classList.remove('expanded');
+            }
+        }
+
+        function handleKeyboardShortcuts(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'k':
+                        e.preventDefault();
+                        document.getElementById('globalSearch').focus();
+                        break;
+                    case 'n':
+                        e.preventDefault();
+                        // Open new patient modal
+                        new bootstrap.Modal(document.getElementById('addPatientModal')).show();
+                        break;
                 }
             }
         }
-    });
-}
 
-function initializeAnalyticsChart() {
-    const ctx = document.getElementById('analyticsChart');
-    if (!ctx) return;
-    
-    charts.analyticsChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: []
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                }
-            }
-        }
-    });
-}
-
-function generateReport() {
-    const reportType = document.getElementById('reportType')?.value;
-    const startDate = document.getElementById('reportStart')?.value;
-    const endDate = document.getElementById('reportEnd')?.value;
-    
-    showAlert(`Generating ${reportType} report from ${startDate} to ${endDate}`, 'info');
-    
-    // Simulate report generation
-    setTimeout(() => {
-        const newReport = {
-            id: mockData.reports.length + 1,
-            report: `${reportType} - ${new Date().toLocaleDateString()}`,
-            date: new Date().toISOString().split('T')[0],
-            status: 'Generated',
-            type: 'Custom'
+        // AI Mock Functions
+        window.inithealthassistant = () => {
+            document.getElementById('wellnessTips').innerHTML = '<p>Stay hydrated and get 8 hours of sleep!</p>';
+            // Populate patient select
+            const select = document.getElementById('patientForRec');
+            select.innerHTML = '<option>John Smith</option><option>Emily Davis</option>';
         };
-        mockData.reports.push(newReport);
-        populateReportsTable();
-        showAlert('Report generated successfully!', 'success');
-    }, 1000);
-}
-
-function generateAnalyticsReport() {
-    const reportType = document.getElementById('analyticsReportType')?.value;
-    const startDate = document.getElementById('analyticsStart')?.value;
-    const endDate = document.getElementById('analyticsEnd')?.value;
-    
-    showAlert(`Generating ${reportType} analytics report from ${startDate} to ${endDate}`, 'info');
-    
-    // Sample data for analytics chart
-    const chartData = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [{
-            label: reportType,
-            data: [Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100],
-            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-            borderColor: 'rgb(75, 192, 192)',
-            borderWidth: 1
-        }]
-    };
-    
-    if (charts.analyticsChart) {
-        charts.analyticsChart.data = chartData;
-        charts.analyticsChart.update();
-    }
-    
-    setTimeout(() => {
-        showAlert('Analytics report generated successfully!', 'success');
-    }, 1000);
-}
-
-// Real-time Features
-function setupRealTimeFeatures() {
-    // Simulate real-time notifications
-    setInterval(() => {
-        const newNotification = {
-            id: mockData.notifications.length + 1,
-            message: `New system alert: ${new Date().toLocaleTimeString()}`,
-            time: 'Just now',
-            read: false,
-            priority: 'normal'
-        };
-        mockData.notifications.unshift(newNotification);
-        populateNotifications();
-    }, 60000); // Every minute
-}
-
-// Window Resize Handler
-function handleWindowResize() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-    
-    if (window.innerWidth > 768) {
-        sidebar.classList.remove('show');
-        mainContent.classList.remove('expanded');
-    }
-}
-
-// Keyboard Shortcuts
-function handleKeyboardShortcuts(e) {
-    if (e.ctrlKey && e.key === '/') {
-        const search = document.getElementById('globalSearch');
-        if (search) search.focus();
-    }
-    if (e.ctrlKey && e.key === 'n') {
-        e.preventDefault();
-        const modal = new bootstrap.Modal(document.getElementById('scheduleAppointmentModal'));
-        modal.show();
-    }
-}
-</script>
+    </script>
 </body>
 </html>
